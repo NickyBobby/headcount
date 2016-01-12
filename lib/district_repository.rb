@@ -29,6 +29,13 @@ class DistrictRepository
     end.uniq
     create_districts(districts)
   end
+
+  def find_by_name(district_name)
+    district_name.upcase!
+    districts.select do |district|
+      district.name == district_name
+    end.first
+  end
 end
 
 if __FILE__ == $0

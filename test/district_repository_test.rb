@@ -17,4 +17,42 @@ class DistrictRepositoryTest < Minitest::Test
 
     assert_instance_of District, dr.districts[0]
   end
+
+  def test_can_find_district_by_name
+    dr = DistrictRepository.new
+    dr.load_data({
+      enrollment: {
+        kindergarten: "./test/kindergartners_example.csv"
+      }
+    })
+    d = dr.find_by_name("ASPEN 1")
+
+    assert_instance_of District, d
+    assert_equal "ASPEN 1", d.name
+  end
+
+  def test_can_find_district_by_name_with_case_insensitivity
+    dr = DistrictRepository.new
+    dr.load_data({
+      enrollment: {
+        kindergarten: "./test/kindergartners_example.csv"
+      }
+    })
+    d = dr.find_by_name("aspen 1")
+
+    assert_instance_of District, d
+    assert_equal "ASPEN 1", d.name
+  end
+
+  def test_returns_nil_if_cant_find_district_by_name
+    dr = DistrictRepository.new
+    dr.load_data({
+      enrollment: {
+        kindergarten: "./test/kindergartners_example.csv"
+      }
+    })
+    d = dr.find_by_name("lawls")
+
+    assert d.nil?
+  end
 end
