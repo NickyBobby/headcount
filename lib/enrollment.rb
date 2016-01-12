@@ -1,19 +1,19 @@
 
 
-class Enrollment(district_data)
+class Enrollment
 
-  def initialize
-    
+  def initialize(district_data)
+
     @name = district_data[:name]
-    @participation = district_data[:]
+    @participation = district_data[:kindergarten_participation]
   end
 
   def kindergarten_participation_by_year
-
+    @participation
   end
 
   def kindergarten_participation_in_year(year)
-
+    @particiation[year]
   end
 
 end

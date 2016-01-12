@@ -10,13 +10,18 @@ class EnrollmentRepository
     @years = Hash.new
   end
 
-  def load_data(enrollment_data)
-    kindergarten_csv = enrollment_data[:enrollment][:kindergarten]
-    contents = CSV.open kindergarten_csv, headers: true, header_converters: :symbol
-    parse_for_data(contents)
+  def parse_file(enrollment_data)
+    CSV.open enrollment_data[:enrollment][:kindergarten],
+                      headers: true,
+                      header_converters: :symbol
   end
 
-  def parse_for_data(contents)
+  def load_data(enrollment_data)
+    contents = parse_file(enrollment_data)
+    extract_info(contents)
+  end
+
+  def extract_info(contents)
     contents.each do |row|
       district = row[:location]
       year = row[:timeframe]
@@ -28,26 +33,6 @@ class EnrollmentRepository
     end
   end
 
-  # def parse_for_data(contents)
-  #   contents.each do |row|
-  #     district = row[:location]
-  #     year = row[:timeframe]
-  #     participation = row[:data][0..4].to_f
-  #     binding.pry
-  #     # participation = BigDecimal.new(participation)
-  #     years_hash(participation, year)
-  #     # @years[year.to_sym] = participation
-  #     kindergarten[district.to_sym] = @years
-  #     # if @kindergarten[:name] == district
-  #     #   binding.pry
-  #     #   Hash.new(:name) = district
-  #     # else
-  #     #   @kindergarten[:name] = district
-  #     #   @kindergarten[:kindergarten_participation] = @years
-  #     # end
-  #   end
-  #   binding.pry
-  # end
 
 
   def years_hash(participation, year)
