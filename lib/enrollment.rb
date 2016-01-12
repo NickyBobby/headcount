@@ -3,6 +3,7 @@
 class Enrollment(district_data)
 
   def initialize
+    
     @name = district_data[:name]
     @participation = district_data[:]
   end
