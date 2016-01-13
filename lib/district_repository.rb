@@ -38,7 +38,7 @@ class DistrictRepository
 
   def find_all_matching(fragment)
     districts.select do |district|
-      district.name.include? fragment
+      district.name.include? fragment.upcase
     end
   end
 end
