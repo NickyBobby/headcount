@@ -35,7 +35,7 @@ class EnrollmentRepository
     contents.each do |row|
       district = row[:location]
       year = row[:timeframe].to_i
-      participation = row[:data].rjust(4, "0").to_f
+      participation = row[:data][0..4].ljust(5, "0").to_f
       participation_by_year = years_hash(participation, year)
       create_enrollment(district, participation_by_year)
     end
@@ -60,13 +60,13 @@ class EnrollmentRepository
 
 end
 
-# er = EnrollmentRepository.new
-# er.load_data({
-#   :enrollment => {
-#     :kindergarten => "./data/sample_kindergarten.csv"
-#   }
-# })
-# p er.enrollments
+er = EnrollmentRepository.new
+er.load_data({
+  :enrollment => {
+    :kindergarten => "./data/sample_kindergarten.csv"
+  }
+})
+p er.enrollments
 # enrollment = er.find_by_name("ACADEMY 20")
 # p enrollment
 # enron = er.find_by_name("NOOOOOO")
