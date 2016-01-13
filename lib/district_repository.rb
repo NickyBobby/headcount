@@ -31,10 +31,15 @@ class DistrictRepository
   end
 
   def find_by_name(district_name)
-    district_name.upcase!
     districts.select do |district|
-      district.name == district_name
+      district.name == district_name.upcase
     end.first
+  end
+
+  def find_all_matching(fragment)
+    districts.select do |district|
+      district.name.include? fragment
+    end
   end
 end
 

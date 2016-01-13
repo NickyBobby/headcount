@@ -55,4 +55,18 @@ class DistrictRepositoryTest < Minitest::Test
 
     assert d.nil?
   end
+
+  def test_returns_an_array_of_all_districts_matching_a_fragment
+    dr = DistrictRepository.new
+    dr.load_data({
+      enrollment: {
+        kindergarten: "./test/kindergartners_example.csv"
+      }
+    })
+    d = dr.find_all_matching("AD")
+
+    assert_equal 4, d.count
+    assert_equal 'COLORADO', d.first.name
+    assert_equal 'ADAMS-ARAPAHOE 28J', d.last.name
+  end
 end
