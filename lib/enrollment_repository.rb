@@ -60,13 +60,13 @@ class EnrollmentRepository
 
 end
 
-er = EnrollmentRepository.new
-er.load_data({
-  :enrollment => {
-    :kindergarten => "./data/sample_kindergarten.csv"
-  }
-})
-p er.enrollments
+# er = EnrollmentRepository.new
+# er.load_data({
+#   :enrollment => {
+#     :kindergarten => "./data/sample_kindergarten.csv"
+#   }
+# })
+# p er.enrollments
 # enrollment = er.find_by_name("ACADEMY 20")
 # p enrollment
 # enron = er.find_by_name("NOOOOOO")
