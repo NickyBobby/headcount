@@ -1,7 +1,6 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require "district"
 require "csv"
-require "pry"
 
 class DistrictRepository
   attr_reader :districts
@@ -10,24 +9,30 @@ class DistrictRepository
     @districts = []
   end
 
-  def create_districts(districts)
-    districts.each do |district|
-      @districts << District.new(name: district)
+  def create_districts(locations)
+    locations.each do |location|
+      @districts << District.new(name: location)
     end
   end
 
   def parse_file(options)
+    # maybe have its own class called Parser? Instance would be
+    # used like parser.parse(options)
     CSV.open options[:enrollment][:kindergarten],
                      headers: true,
                      header_converters: :symbol
   end
 
-  def load_data(options)
-    contents = parse_file(options)
-    districts = contents.map do |row|
+  def get_locations(contents)
+    contents.map do |row|
       row[:location]
     end.uniq
-    create_districts(districts)
+  end
+
+  def load_data(options)
+    contents = parse_file(options)
+    locations = get_locations(contents)
+    create_districts(locations)
   end
 
   def find_by_name(district_name)
@@ -50,4 +55,8 @@ if __FILE__ == $0
       kindergarten: "./data/Kindergartners in full-day program.csv"
     }
   })
+  p dr.find_by_name "ACADEMY 20"
+  p dr.find_by_name "Doesn't Exist"
+  p dr.find_all_matching "AD"
+  p dr.find_all_matching "%"
 end

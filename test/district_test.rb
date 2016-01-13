@@ -7,7 +7,7 @@ class DistrictTest < Minitest::Test
     assert_instance_of District, d
   end
 
-  def test_can_take_a_has_with_a_name_key
+  def test_can_take_a_hash_with_a_name_key
     d = District.new(name: "ACADEMY 20")
 
     assert_equal "ACADEMY 20", d.name
