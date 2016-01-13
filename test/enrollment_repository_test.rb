@@ -1,5 +1,5 @@
-require 'minitest/autorun'
-require 'enrollment_repository'
+require "test_helper"
+require "enrollment_repository"
 
 
 class EnrollmentRepositoryTest < Minitest::Test

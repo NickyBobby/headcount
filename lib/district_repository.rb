@@ -60,15 +60,15 @@ class DistrictRepository
   end
 end
 
-if __FILE__ == $0
-  dr = DistrictRepository.new
-  dr.load_data({
-    enrollment: {
-      kindergarten: "./data/Kindergartners in full-day program.csv"
-    }
-  })
-  p dr.find_by_name "ACADEMY 20"
-  p dr.find_by_name "Doesn't Exist"
-  p dr.find_all_matching "AD"
-  p dr.find_all_matching "%"
-end
+# if __FILE__ == $0
+#   dr = DistrictRepository.new
+#   dr.load_data({
+#     enrollment: {
+#       kindergarten: "./data/Kindergartners in full-day program.csv"
+#     }
+#   })
+#   p dr.find_by_name "ACADEMY 20"
+#   p dr.find_by_name "Doesn't Exist"
+#   p dr.find_all_matching "AD"
+#   p dr.find_all_matching "%"
+# end

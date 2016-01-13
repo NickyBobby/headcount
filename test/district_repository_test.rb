@@ -1,3 +1,4 @@
+require "test_helper"
 require "district_repository"
 
 class DistrictRepositoryTest < Minitest::Test

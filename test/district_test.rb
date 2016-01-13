@@ -1,3 +1,4 @@
+require "test_helper"
 require "district"
 
 class DistrictTest < Minitest::Test
