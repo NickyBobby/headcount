@@ -28,9 +28,11 @@ class EnrollmentRepositoryTest < Minitest::Test
       }
     })
     e = er.find_by_name("Colorado")
+    no = er.find_by_name("NOOOOO")
 
     assert_instance_of Enrollment, e
     assert_equal "Colorado", e.name 
+    assert_nil no
   end
 
 end
