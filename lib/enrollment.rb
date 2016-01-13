@@ -1,10 +1,10 @@
-
+require "pry"
 
 class Enrollment
+  attr_reader :name, :participation
 
   def initialize(district_data)
-
-    @name = district_data[:name]
+    @name = district_data[:name]#.upcase
     @participation = district_data[:kindergarten_participation]
   end
 
@@ -18,5 +18,6 @@ class Enrollment
 
 end
 
-
-e = Enrollment.new({:name => "ACADEMY 20", :kindergarten_participation => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677})
+if __FILE__ == $0
+  e = Enrollment.new(name: "ACADEMY 20", kindergarten_participation: { 2010 => 0.3915, 2011 => 0.4})
+end

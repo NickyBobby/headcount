@@ -1,13 +1,13 @@
+$LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'pry'
 require 'csv'
 require 'enrollment'
 
 class EnrollmentRepository
-  attr_reader :years, :kindergarten
+  attr_reader :enrollments
 
   def initialize
-    @kindergarten = Hash.new
-    @years = Hash.new
+    @enrollments = []
   end
 
   def parse_file(enrollment_data)
@@ -21,29 +21,44 @@ class EnrollmentRepository
     extract_info(contents)
   end
 
+  def create_enrollment(district, participation_by_year)
+    enrollment = enrollment_exists(district)
+    unless enrollment.nil?
+      enrollment.participation.merge!(participation_by_year)
+    else
+      enrollments << Enrollment.new({name: district,
+                                    kindergarten_participation: participation_by_year})
+    end
+  end
+
   def extract_info(contents)
     contents.each do |row|
-      district = row[:location]
-      year = row[:timeframe]
-      participation = row[:data][0..4].to_f
-      # participation = BigDecimal.new(participation)
-      years_hash(participation, year)
-      # @years[year.to_sym] = participation
-      @kindergarten[district.to_sym] = @years
+      district = row[:location]#.upcase
+      year = row[:timeframe].to_i
+      participation = row[:data].rjust(4, "0").to_f
+      participation_by_year = years_hash(participation, year)
+      create_enrollment(district, participation_by_year)
+    end
+  end
+
+  def enrollment_exists(district)
+    enrollments.detect do |enrollment|
+      enrollment.name == district
     end
   end
 
 
-
   def years_hash(participation, year)
-    @years[year.to_i] = participation
-    # @years[year] = participation
+    { year => participation }
   end
 
   def find_by_name(district)
-    e = @kindergarten[district.to_sym]
-    binding.pry
-    p e
+    # loop through enrollments
+    # grab the enrollment that matches district
+    # enrollment.name.upcase == district.upcase
+    name = enrollments.detect do |enrollment|
+      enrollment.name.include?(district)
+    end
   end
 
 end
@@ -53,8 +68,17 @@ er = EnrollmentRepository.new
 
 er.load_data({
   :enrollment => {
-    :kindergarten => "./data/Kindergartners in full-day program.csv"
+    :kindergarten => "./data/sample_kindergarten.csv"
   }
 })
+
+p er.enrollments 
+
 enrollment = er.find_by_name("ACADEMY 20")
+
+p enrollment
 # => <Enrollment>
+
+enron = er.find_by_name("NOOOOOO")
+
+p enron
