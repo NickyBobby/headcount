@@ -41,8 +41,10 @@ class EnrollmentRepository
     unless enrollment.nil?
       enrollment.participation.merge!(participation_by_year)
     else
-      enrollments << Enrollment.new({name: district,
-                                    kindergarten_participation: participation_by_year})
+      enrollments << Enrollment.new({
+        name: district,
+        kindergarten_participation: participation_by_year
+      })
     end
   end
 
