@@ -36,9 +36,9 @@ class DistrictRepository
   end
 
   def find_by_name(district_name)
-    districts.select do |district|
+    districts.detect do |district|
       district.name == district_name.upcase
-    end.first
+    end
   end
 
   def find_all_matching(fragment)
