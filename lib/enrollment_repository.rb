@@ -10,15 +10,31 @@ class EnrollmentRepository
     @enrollments = []
   end
 
-  def parse_file(enrollment_data)
-    CSV.open enrollment_data[:enrollment][:kindergarten],
+  def parse_file(data)
+    CSV.open data[:enrollment][:kindergarten],
                       headers: true,
                       header_converters: :symbol
   end
 
-  def load_data(enrollment_data)
-    csv_contents = parse_file(enrollment_data)
-    extract_info(contents)
+  def convert_csv_to_hashes(contents)
+    contents.map do |row|
+      {
+        district:    row[:location],
+        time_frame:  row[:timeframe],
+        data_format: row[:dataformat],
+        data:        row[:data]
+      }
+    end
+  end
+
+  def connect_year_by_participation(participation, year)
+    { year => participation }
+  end
+
+  def enrollment_exists(district)
+    enrollments.detect do |enrollment|
+      enrollment.name == district
+    end
   end
 
   def create_enrollment(district, participation_by_year)
@@ -33,41 +49,37 @@ class EnrollmentRepository
 
   def extract_info(contents)
     contents.each do |row|
-      district = row[:location]
-      year = row[:timeframe].to_i
+      district = row[:district]
+      year = row[:time_frame].to_i
       participation = row[:data].to_f.round(3)
-      participation_by_year = years_hash(participation, year)
+      participation_by_year = connect_year_by_participation(participation, year)
       create_enrollment(district, participation_by_year)
     end
   end
 
-  def enrollment_exists(district)
-    enrollments.detect do |enrollment|
-      enrollment.name == district
-    end
-  end
-
-
-  def years_hash(participation, year)
-    { year => participation }
+  def load_data(data)
+    csv_contents = parse_file(data)
+    contents = convert_csv_to_hashes(csv_contents)
+    extract_info(contents)
   end
 
   def find_by_name(district)
-    name = enrollments.detect do |enrollment|
+    enrollments.detect do |enrollment|
       enrollment.name.upcase.include?(district.upcase)
     end
   end
-
 end
 
-er = EnrollmentRepository.new
-er.load_data({
-  :enrollment => {
-    :kindergarten => "./data/sample_kindergarten.csv"
-  }
-})
-p er.enrollments
-# enrollment = er.find_by_name("ACADEMY 20")
-# p enrollment
-# enron = er.find_by_name("NOOOOOO")
-# p enron
+if __FILE__ == $0
+  er = EnrollmentRepository.new
+  er.load_data({
+    :enrollment => {
+      :kindergarten => "./test/sample_kindergarten.csv"
+    }
+  })
+  p er.enrollments
+  enrollment = er.find_by_name("ACADEMY 20")
+  p enrollment
+  enron = er.find_by_name("NOOOOOO")
+  p enron
+end
