@@ -1,7 +1,6 @@
-$LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'pry'
 require 'csv'
-require 'enrollment'
+require_relative 'enrollment'
 
 class EnrollmentRepository
   attr_reader :enrollments

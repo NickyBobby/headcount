@@ -1,7 +1,6 @@
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-require "district"
 require "csv"
 require "pry"
+require_relative "district"
 
 class DistrictRepository
   attr_reader :districts
