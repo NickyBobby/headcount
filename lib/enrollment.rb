@@ -1,7 +1,7 @@
 require "pry"
 
 class Enrollment
-  attr_reader :name, :participation
+  attr_accessor :name, :participation
 
   def initialize(district_data)
     @name = district_data[:name]#.upcase

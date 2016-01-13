@@ -53,32 +53,22 @@ class EnrollmentRepository
   end
 
   def find_by_name(district)
-    # loop through enrollments
-    # grab the enrollment that matches district
-    # enrollment.name.upcase == district.upcase
     name = enrollments.detect do |enrollment|
-      enrollment.name.include?(district)
+      enrollment.name.upcase.include?(district.upcase)
     end
   end
 
 end
 
 
-er = EnrollmentRepository.new
-
-er.load_data({
-  :enrollment => {
-    :kindergarten => "./data/sample_kindergarten.csv"
-  }
-})
-
-p er.enrollments 
-
-enrollment = er.find_by_name("ACADEMY 20")
-
-p enrollment
-# => <Enrollment>
-
-enron = er.find_by_name("NOOOOOO")
-
-p enron
+# er = EnrollmentRepository.new
+# er.load_data({
+#   :enrollment => {
+#     :kindergarten => "./data/sample_kindergarten.csv"
+#   }
+# })
+# p er.enrollments
+# enrollment = er.find_by_name("ACADEMY 20")
+# p enrollment
+# enron = er.find_by_name("NOOOOOO")
+# p enron

@@ -1,4 +1,5 @@
 require 'minitest/autorun'
+require 'enrollment_repository'
 
 
 class EnrollmentRepositoryTest < Minitest::Test
@@ -31,8 +32,20 @@ class EnrollmentRepositoryTest < Minitest::Test
     no = er.find_by_name("NOOOOO")
 
     assert_instance_of Enrollment, e
-    assert_equal "Colorado", e.name 
+    assert_equal "Colorado", e.name
     assert_nil no
+  end
+
+  def test_can_find_by_name_with_case_insensitivity
+    er = EnrollmentRepository.new
+    er.load_data({
+      enrollment: {
+        kindergarten: "./test/kindergartners_example.csv"
+      }
+    })
+    e = er.find_by_name("ColoradO")
+
+    assert_equal "Colorado", e.name
   end
 
 end
