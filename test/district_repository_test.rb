@@ -32,7 +32,8 @@ class DistrictRepositoryTest < Minitest::Test
     options = { enrollment: {
       kindergarten: "./test/kindergartners_example.csv"
     }}
-    contents = dr.parse_file(options)
+    csv_contents = dr.parse_file(options)
+    contents = dr.convert_csv_to_hashes(csv_contents)
     locations = dr.get_locations(contents)
 
     assert_instance_of Array, locations

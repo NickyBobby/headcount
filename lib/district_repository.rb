@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require "district"
 require "csv"
+require "pry"
 
 class DistrictRepository
   attr_reader :districts
@@ -25,12 +26,24 @@ class DistrictRepository
 
   def get_locations(contents)
     contents.map do |row|
-      row[:location]
+      row[:district]
     end.uniq
   end
 
+  def convert_csv_to_hashes(contents)
+    contents.map do |row|
+      {
+        district:    row[:location],
+        time_frame:  row[:timeframe],
+        data_format: row[:dataformat],
+        data:        row[:data]
+      }
+    end
+  end
+
   def load_data(options)
-    contents = parse_file(options)
+    csv_contents = parse_file(options)
+    contents = convert_csv_to_hashes(csv_contents)
     locations = get_locations(contents)
     create_districts(locations)
   end
