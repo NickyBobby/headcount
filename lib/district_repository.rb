@@ -16,10 +16,10 @@ class DistrictRepository
     end
   end
 
-  def parse_file(options)
+  def parse_file(data)
     # maybe have its own class called Parser? Instance would be
-    # used like parser.parse(options)
-    CSV.open options[:enrollment][:kindergarten],
+    # used like parser.parse(data)
+    CSV.open data[:enrollment][:kindergarten],
                      headers: true,
                      header_converters: :symbol
   end
@@ -41,8 +41,8 @@ class DistrictRepository
     end
   end
 
-  def load_data(options)
-    csv_contents = parse_file(options)
+  def load_data(data)
+    csv_contents = parse_file(data)
     contents = convert_csv_to_hashes(csv_contents)
     locations = get_locations(contents)
     create_districts(locations)
