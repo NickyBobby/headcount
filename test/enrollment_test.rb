@@ -16,11 +16,11 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_will_return_list_of_kindergarten_participation_by_year
-    skip
     e = Enrollment.new({:name => "ACADEMY 20", :kindergarten_participation => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}})
+    expected = { 2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677 }
 
     assert_instance_of Enrollment, e
-    assert_equal { 2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677 }, e.kindergarten_participation_by_year
+    assert_equal expected, e.kindergarten_participation_by_year
   end
 
   def test_will_return_participation_of_specific_year

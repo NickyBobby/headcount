@@ -17,7 +17,7 @@ class EnrollmentRepository
   end
 
   def load_data(enrollment_data)
-    contents = parse_file(enrollment_data)
+    csv_contents = parse_file(enrollment_data)
     extract_info(contents)
   end
 
@@ -35,7 +35,7 @@ class EnrollmentRepository
     contents.each do |row|
       district = row[:location]
       year = row[:timeframe].to_i
-      participation = row[:data][0..4].ljust(5, "0").to_f
+      participation = row[:data].to_f.round(3)
       participation_by_year = years_hash(participation, year)
       create_enrollment(district, participation_by_year)
     end
