@@ -10,7 +10,7 @@ class DistrictRepositoryTest < Minitest::Test
   def test_can_parse_a_CSV_file
     dr = DistrictRepository.new
     options = { enrollment: {
-      kindergarten: "./test/kindergartners_example.csv"
+      kindergarten: "./test/sample_kindergarten.csv"
     }}
     csv_instance = dr.parse_file(options)
 
@@ -39,7 +39,7 @@ class DistrictRepositoryIntegrationTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({
       enrollment: {
-        kindergarten: "./test/kindergartners_example.csv"
+        kindergarten: "./test/sample_kindergarten.csv"
       }
     })
 
