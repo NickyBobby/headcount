@@ -4,7 +4,7 @@ class Enrollment
   attr_accessor :name, :participation
 
   def initialize(district_data)
-    @name = district_data[:name]#.upcase
+    @name = district_data[:name]
     @participation = district_data[:kindergarten_participation]
   end
 

@@ -29,11 +29,9 @@ class EnrollmentRepositoryTest < Minitest::Test
       }
     })
     e = er.find_by_name("Colorado")
-    no = er.find_by_name("NOOOOO")
 
     assert_instance_of Enrollment, e
     assert_equal "Colorado", e.name
-    assert_nil no
   end
 
   def test_can_find_by_name_with_case_insensitivity
@@ -43,9 +41,23 @@ class EnrollmentRepositoryTest < Minitest::Test
         kindergarten: "./test/kindergartners_example.csv"
       }
     })
-    e = er.find_by_name("ColoradO")
+    e = er.find_by_name("ColOradO")
+    f = er.find_by_name("academy 20")
 
     assert_equal "Colorado", e.name
+    assert_equal "ACADEMY 20", f.name
+  end
+
+  def test_returns_nil_if_cant_find_enrollment_by_name
+    er = EnrollmentRepository.new
+    er.load_data({
+      enrollment: {
+        kindergarten: "./test/kindergartners_example.csv"
+      }
+    })
+    no = er.find_by_name("NOOOOO")
+
+    assert_nil no
   end
 
 end
