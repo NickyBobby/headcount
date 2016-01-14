@@ -54,7 +54,7 @@ class EnrollmentRepositoryIntegrationTest < Minitest::Test
     ])
 
     assert_instance_of Enrollment, er.enrollments.first
-    assert_equal "Colorado", er.enrollments.first.name
+    assert_equal "COLORADO", er.enrollments.first.name
     assert_equal 1, er.enrollments.count
   end
 
@@ -64,7 +64,7 @@ class EnrollmentRepositoryIntegrationTest < Minitest::Test
     e = er.find_by_name("Colorado")
 
     assert_instance_of Enrollment, e
-    assert_equal "Colorado", e.name
+    assert_equal "COLORADO", e.name
   end
 
   def test_can_find_by_name_with_case_insensitivity
@@ -75,7 +75,7 @@ class EnrollmentRepositoryIntegrationTest < Minitest::Test
     e = er.find_by_name("ColOradO")
     f = er.find_by_name("academy 20")
 
-    assert_equal "Colorado", e.name
+    assert_equal "COLORADO", e.name
     assert_equal "ACADEMY 20", f.name
   end
 
@@ -92,7 +92,7 @@ class EnrollmentRepositoryIntegrationTest < Minitest::Test
     er.create_enrollment("Colorado", { 2010 => 0.333 })
     enrollment = er.enrollment_exists("Colorado")
 
-    assert_equal "Colorado", enrollment.name
+    assert_equal "COLORADO", enrollment.name
   end
 
 end

@@ -32,7 +32,7 @@ class EnrollmentRepository
 
   def enrollment_exists(district)
     enrollments.detect do |enrollment|
-      enrollment.name == district
+      enrollment.name == district.upcase
     end
   end
 

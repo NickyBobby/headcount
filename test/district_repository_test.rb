@@ -117,7 +117,7 @@ class DistrictRepositoryIntegrationTest < Minitest::Test
     assert_equal 0, d.count
     assert_equal [], d
   end
-
+  
   def test_creates_a_relationship_between_district_and_enrollment
     dr = DistrictRepository.new
     dr.load_data({
@@ -128,6 +128,6 @@ class DistrictRepositoryIntegrationTest < Minitest::Test
     district = dr.find_by_name("COLORADO")
     dr.create_relationship(district)
 
-    assert_equal "Colorado", district.enrollment.name
+    assert_equal "COLORADO", district.enrollment.name
   end
 end
