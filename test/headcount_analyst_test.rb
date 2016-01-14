@@ -6,12 +6,7 @@ class HeadcountAnalystTest < Minitest::Test
 
   def setup
     @dr = DistrictRepository.new
-  end
-
-  def test_can_create_an_instance
-    ha = HeadcountAnalyst.new(dr)
-
-    assert_instance_of HeadcountAnalyst, ha
+    # load in data
   end
 
   def test_can_get_both_districts
@@ -19,10 +14,7 @@ class HeadcountAnalystTest < Minitest::Test
     ha.load_district_repo_data
     districts = ha.grab_districts("ACADEMY 20", "COLORADO")
 
-    assert_instance_of District, districts.first
-    assert_equal "ACADEMY 20", districts.first.name
-    assert_instance_of District, districts.last
-    assert_equal "COLORADO", districts.last.name
+    assert_equal ["ACADEMY 20", "COLORADO"], districts.map(&:name)
   end
 
   def test_can_get_kindergarten_participation_against_state_average
