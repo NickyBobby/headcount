@@ -91,7 +91,7 @@ class EnrollmentTest < Minitest::Test
                           2011 => 0.489,
                           2012 => 0.47883
                         }
-                      )
+                       )
     e2 = Enrollment.new(name: "COLORADO",
                        kindergarten_participation:
                         {
@@ -99,7 +99,7 @@ class EnrollmentTest < Minitest::Test
                           2011 => 0.672,
                           2012 => 0.695
                         }
-                      )
+                       )
     trend = e1.get_participation_average_by_year(e2)
     expected = { 2010 => 0.681, 2011 => 0.728, 2012 => 0.689 }
 
