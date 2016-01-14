@@ -28,4 +28,11 @@ class HeadcountAnalyst
     d2_average = districts.last.enrollment.get_participation_average
     (d1_average / d2_average).round(3)
   end
+
+  def kindergarten_participation_rate_variation_trend(district, compared_district)
+    load_district_repo_data
+    districts = grab_districts(district, compared_district[:against])
+    
+
+  end
 end

@@ -40,4 +40,14 @@ class HeadcountAnalystTest < Minitest::Test
 
     assert_equal 0.447, rate
   end
+
+  def test_can_kindergarten_participation_trend_against_state_average
+    ha = HeadcountAnalyst.new(dr)
+    trend = ha.kindergarten_participation_rate_variation_trend("ACADEMY 20",
+                                                               against: "COLORADO")
+
+
+    assert_instance_of Hash, trend
+    refute trend[2010].nil?
+  end
 end

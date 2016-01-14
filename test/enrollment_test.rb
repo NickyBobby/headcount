@@ -82,4 +82,27 @@ class EnrollmentTest < Minitest::Test
 
     assert_equal 0.338, average
   end
+
+  def test_get_average_participation_by_year
+    e1 = Enrollment.new(name: "ACADEMY 20",
+                       kindergarten_participation:
+                        {
+                          2010 => 0.43628,
+                          2011 => 0.489,
+                          2012 => 0.47883
+                        }
+                      )
+    e2 = Enrollment.new(name: "COLORADO",
+                       kindergarten_participation:
+                        {
+                          2010 => 0.64019,
+                          2011 => 0.672,
+                          2012 => 0.695
+                        }
+                      )
+    trend = e1.get_participation_average_by_year(e2)
+    expected = { 2010 => 0.681, 2011 => 0.728, 2012 => 0.689 }
+
+    assert_equal expected, trend
+  end
 end
