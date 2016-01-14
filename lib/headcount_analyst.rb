@@ -22,6 +22,7 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_rate_variation(district, compared_district)
+    # ask Josh about how we are loading data. If before we pass in dr or after
     load_district_repo_data
     districts = grab_districts(district, compared_district[:against])
     d1_average = districts.first.enrollment.get_participation_average

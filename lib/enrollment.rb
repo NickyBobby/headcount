@@ -31,6 +31,8 @@ class Enrollment
 
   def get_participation_average_by_year(enrollment)
     average_by_year = {}
+    # How do we start from the lowest year of a hash??? Iterate against two
+    # hashes????
     2004.upto(2014) do |year|
       if participation[year] && enrollment.participation[year]
         average = participation[year] / enrollment.participation[year]
