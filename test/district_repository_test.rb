@@ -8,6 +8,12 @@ class DistrictRepositoryTest < Minitest::Test
     assert_instance_of DistrictRepository, dr
   end
 
+  def test_has_enrollment_repository_upon_creation
+    dr = DistrictRepository.new
+
+    assert_instance_of EnrollmentRepository, dr.er
+  end
+
   def test_can_parse_a_CSV_file
     dr = DistrictRepository.new
     options = { enrollment: {
