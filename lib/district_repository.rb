@@ -1,17 +1,26 @@
 require "csv"
 require "pry"
 require_relative "district"
+require_relative "enrollment_repository"
 
 class DistrictRepository
-  attr_reader :districts
+  attr_reader :districts, :er
 
   def initialize
     @districts = []
+    @er = EnrollmentRepository.new
+  end
+
+  def create_relationship(district)
+    enrollment = er.enrollment_exists(district.name)
+    district.enrollment = enrollment
   end
 
   def create_districts(locations)
     locations.each do |location|
-      @districts << District.new(name: location)
+      district = District.new(name: location)
+      create_relationship(district)
+      @districts << district
     end
   end
 
@@ -40,7 +49,12 @@ class DistrictRepository
     end
   end
 
+  def load_enrollment_data(data)
+    er.load_data(data)
+  end
+
   def load_data(data)
+    load_enrollment_data(data)
     csv_contents = parse_file(data)
     contents = convert_csv_to_hashes(csv_contents)
     locations = get_locations(contents)

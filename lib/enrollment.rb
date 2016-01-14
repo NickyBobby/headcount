@@ -4,7 +4,7 @@ class Enrollment
   attr_reader :name, :participation
 
   def initialize(data)
-    @name = data[:name]
+    @name = data[:name].upcase
     @participation = sanitize(data[:kindergarten_participation])
   end
 
@@ -20,6 +20,26 @@ class Enrollment
 
   def kindergarten_participation_in_year(year)
     participation[year]
+  end
+
+  def get_participation_average
+    sum = participation.values.inject(0) do |acc, value|
+      acc + value
+    end
+    sum / participation.count
+  end
+
+  def get_participation_average_by_year(enrollment)
+    average_by_year = {}
+    # How do we start from the lowest year of a hash??? Iterate against two
+    # hashes????
+    2004.upto(2014) do |year|
+      if participation[year] && enrollment.participation[year]
+        average = participation[year] / enrollment.participation[year]
+        average_by_year[year] = average.round(3)
+      end
+    end
+    average_by_year
   end
 end
 
