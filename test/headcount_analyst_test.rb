@@ -26,7 +26,6 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_can_get_kindergarten_participation_against_state_average
-    skip
     ha = HeadcountAnalyst.new(dr)
     rate = ha.kindergarten_participation_rate_variation("ACADEMY 20",
                                                         against: "COLORADO")
@@ -37,8 +36,8 @@ class HeadcountAnalystTest < Minitest::Test
   def test_can_get_kindergarten_participation_against_another_district
     ha = HeadcountAnalyst.new(dr)
     rate = ha.kindergarten_participation_rate_variation("ACADEMY 20",
-                                                        against: "YUMA SCHOOL DISTRICT")
+                                                        against: "YUMA SCHOOL DISTRICT 1")
 
-    assert_equal 1.234, rate
+    assert_equal 0.447, rate
   end
 end
