@@ -28,6 +28,17 @@ class Enrollment
     end
     sum / participation.count
   end
+
+  def get_participation_average_by_year(enrollment)
+    average_by_year = {}
+    2004.upto(2014) do |year|
+      if participation[year] && enrollment.participation[year]
+        average = participation[year] / enrollment.participation[year]
+        average_by_year[year] = average.round(3)
+      end
+    end
+    average_by_year
+  end
 end
 
 # if __FILE__ == $0

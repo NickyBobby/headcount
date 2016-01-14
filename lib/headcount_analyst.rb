@@ -32,7 +32,8 @@ class HeadcountAnalyst
   def kindergarten_participation_rate_variation_trend(district, compared_district)
     load_district_repo_data
     districts = grab_districts(district, compared_district[:against])
-    
-
+    e1 = districts.first.enrollment
+    e2 = districts.last.enrollment
+    e1.get_participation_average_by_year(e2)
   end
 end
