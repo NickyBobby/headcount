@@ -11,9 +11,16 @@ class DistrictRepository
     @er = EnrollmentRepository.new
   end
 
+  def create_relationship(district)
+    enrollment = er.enrollment_exists(district.name.capitalize)
+    district.enrollment = enrollment
+  end
+
   def create_districts(locations)
     locations.each do |location|
-      @districts << District.new(name: location)
+      district = District.new(name: location)
+      create_relationship(district)
+      @districts << district
     end
   end
 
@@ -42,7 +49,12 @@ class DistrictRepository
     end
   end
 
+  def load_enrollment_data(data)
+    er.load_data(data)
+  end
+
   def load_data(data)
+    load_enrollment_data(data)
     csv_contents = parse_file(data)
     contents = convert_csv_to_hashes(csv_contents)
     locations = get_locations(contents)
