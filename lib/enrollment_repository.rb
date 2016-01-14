@@ -52,7 +52,7 @@ class EnrollmentRepository
     contents.each do |row|
       district = row[:district]
       year = row[:time_frame].to_i
-      participation = row[:data].to_f.round(3)
+      participation = row[:data]
       participation_by_year = connect_year_by_participation(participation, year)
       create_enrollment(district, participation_by_year)
     end

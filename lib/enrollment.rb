@@ -5,7 +5,13 @@ class Enrollment
 
   def initialize(data)
     @name = data[:name]
-    @participation = data[:kindergarten_participation]
+    @participation = sanitize(data[:kindergarten_participation])
+  end
+
+  def sanitize(participation)
+    participation.each do |key, value|
+      participation[key] = value.to_f.round(3)
+    end
   end
 
   def kindergarten_participation_by_year
@@ -15,7 +21,6 @@ class Enrollment
   def kindergarten_participation_in_year(year)
     participation[year]
   end
-
 end
 
 # if __FILE__ == $0
