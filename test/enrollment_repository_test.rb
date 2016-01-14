@@ -3,13 +3,6 @@ require "enrollment_repository"
 
 
 class EnrollmentRepositoryTest < Minitest::Test
-
-  def test_can_create_instances
-    er = EnrollmentRepository.new
-
-    assert_instance_of EnrollmentRepository, er
-  end
-
   def test_can_parse_a_CSV_file
     er = EnrollmentRepository.new
     data = { enrollment: {

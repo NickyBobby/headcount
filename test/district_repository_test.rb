@@ -2,12 +2,6 @@ require "test_helper"
 require "district_repository"
 
 class DistrictRepositoryTest < Minitest::Test
-  def test_can_create_instances
-    dr = DistrictRepository.new
-
-    assert_instance_of DistrictRepository, dr
-  end
-
   def test_has_enrollment_repository_upon_creation
     dr = DistrictRepository.new
 

@@ -67,6 +67,10 @@ class DistrictRepository
     end
   end
 
+  def find_all_by_name(names)
+    names.map { |name| find_by_name(name) }
+  end
+
   def find_all_matching(fragment)
     districts.select do |district|
       district.name.include? fragment.upcase
