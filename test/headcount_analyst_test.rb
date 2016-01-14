@@ -6,7 +6,6 @@ class HeadcountAnalystTest < Minitest::Test
 
   def setup
     @dr = DistrictRepository.new
-
   end
 
   def test_can_create_an_instance

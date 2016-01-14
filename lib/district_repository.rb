@@ -12,7 +12,7 @@ class DistrictRepository
   end
 
   def create_relationship(district)
-    enrollment = er.enrollment_exists(district.name.capitalize)
+    enrollment = er.enrollment_exists(district.name)
     district.enrollment = enrollment
   end
 

@@ -20,7 +20,7 @@ class EnrollmentTest < Minitest::Test
                           2011 => 0.35356,
                           2012 => 0.2677
     }})
-    assert_equal "Colorado", e.name
+    assert_equal "COLORADO", e.name
   end
 
   def test_will_return_list_of_kindergarten_participation_by_year
@@ -57,5 +57,17 @@ class EnrollmentTest < Minitest::Test
     expected = { 2010 => 0.392 }
 
     assert_equal expected, sanitized
+  end
+
+  def test_gets_average_participation_for_all_years
+    e = Enrollment.new({:name => "ACADEMY 20",
+                        :kindergarten_participation => {
+                          2010 => 0.3915, # .392
+                          2011 => 0.35356,# .354
+                          2012 => 0.2677  # .268
+    }})
+    average = e.get_participation_average
+
+    assert_equal 0.338, average
   end
 end
