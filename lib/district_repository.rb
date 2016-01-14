@@ -66,7 +66,6 @@ class DistrictRepository
       district.name == district_name.upcase
     end
   end
-  
 
   def find_all_matching(fragment)
     districts.select do |district|
