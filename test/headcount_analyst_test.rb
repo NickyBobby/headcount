@@ -6,12 +6,15 @@ class HeadcountAnalystTest < Minitest::Test
 
   def setup
     @dr = DistrictRepository.new
-    # load in data
+    @dr.load_data({
+      enrollment: {
+        kindergarten: "./data/Kindergartners in full-day program.csv"
+      }
+    })
   end
 
   def test_can_get_both_districts
     ha = HeadcountAnalyst.new(dr)
-    ha.load_district_repo_data
     districts = ha.grab_districts("ACADEMY 20", "COLORADO")
 
     assert_equal ["ACADEMY 20", "COLORADO"], districts.map(&:name)
