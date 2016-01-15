@@ -25,8 +25,7 @@ class Enrollment
   end
 
   def get_participation_average_by_year(enrollment)
-    min = participation.keys.min
-    max = participation.keys.max
+    min, max = participation.keys.minmax
     min.upto(max).each_with_object({}) do |year, avg|
       next unless participation[year] && enrollment.participation[year]
       average = participation[year] / enrollment.participation[year]
