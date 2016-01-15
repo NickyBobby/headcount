@@ -9,9 +9,7 @@ class Enrollment
   end
 
   def sanitize(participation)
-    participation.each do |key, value|
-      participation[key] = value.to_f.round(3)
-    end
+    participation.each { |key, value| participation[key] = value.to_f.round(3) }
   end
 
   def kindergarten_participation_by_year
@@ -23,23 +21,17 @@ class Enrollment
   end
 
   def get_participation_average
-    sum = participation.values.inject(0) do |acc, value|
-      acc + value
-    end
-    sum / participation.count
+    participation.values.inject(0, :+) / participation.count
   end
 
   def get_participation_average_by_year(enrollment)
-    average_by_year = {}
-    # How do we start from the lowest year of a hash??? Iterate against two
-    # hashes????
-    2004.upto(2014) do |year|
-      if participation[year] && enrollment.participation[year]
-        average = participation[year] / enrollment.participation[year]
-        average_by_year[year] = average.round(3)
-      end
+    min = participation.keys.min
+    max = participation.keys.max
+    min.upto(max).each_with_object({}) do |year, avg|
+      next unless participation[year] && enrollment.participation[year]
+      average = participation[year] / enrollment.participation[year]
+      avg[year] = average.round(3)
     end
-    average_by_year
   end
 end
 

@@ -7,32 +7,6 @@ class DistrictRepositoryTest < Minitest::Test
 
     assert_instance_of EnrollmentRepository, dr.er
   end
-
-  def test_can_parse_a_CSV_file
-    dr = DistrictRepository.new
-    options = { enrollment: {
-      kindergarten: "./test/sample_kindergarten.csv"
-    }}
-    csv_instance = dr.parse_file(options)
-
-    assert_instance_of CSV, csv_instance
-  end
-
-  def test_can_get_location_column_from_CSV
-    dr = DistrictRepository.new
-    locations = dr.get_locations([
-      {
-        district:    "Colorado",
-        time_frame:  "2007",
-        data_format: "Percent",
-        data:        "0.333"
-      }
-    ])
-
-    assert_instance_of Array, locations
-    assert_equal "Colorado", locations.first
-    assert_equal 1, locations.count
-  end
 end
 
 class DistrictRepositoryIntegrationTest < Minitest::Test
@@ -51,10 +25,7 @@ class DistrictRepositoryIntegrationTest < Minitest::Test
     dr = DistrictRepository.new
     dr.create_districts(["Chicago", "New Jersey"])
 
-    assert_instance_of District, dr.districts.first
-    assert_equal "CHICAGO", dr.districts.first.name
-    assert_instance_of District, dr.districts.last
-    assert_equal "NEW JERSEY", dr.districts.last.name
+    assert_equal ["CHICAGO", "NEW JERSEY"], dr.districts.map(&:name)
   end
 
   def test_can_find_district_by_name

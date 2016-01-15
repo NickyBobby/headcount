@@ -31,9 +31,7 @@ class EnrollmentRepository
   end
 
   def enrollment_exists(district)
-    enrollments.detect do |enrollment|
-      enrollment.name == district.upcase
-    end
+    enrollments.detect { |enrollment| enrollment.name == district.upcase }
   end
 
   def create_enrollment(district, participation_by_year)

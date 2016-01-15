@@ -46,9 +46,7 @@ class EnrollmentRepositoryIntegrationTest < Minitest::Test
       }
     ])
 
-    assert_instance_of Enrollment, er.enrollments.first
-    assert_equal "COLORADO", er.enrollments.first.name
-    assert_equal 1, er.enrollments.count
+    assert_equal ["COLORADO"], er.enrollments.map(&:name)
   end
 
   def test_can_find_enrollment_by_name
@@ -87,5 +85,4 @@ class EnrollmentRepositoryIntegrationTest < Minitest::Test
 
     assert_equal "COLORADO", enrollment.name
   end
-
 end
