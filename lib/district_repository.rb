@@ -24,53 +24,30 @@ class DistrictRepository
     end
   end
 
-  def parse_file(data)
-    # maybe have its own class called Parser? Instance would be
-    # used like parser.parse(data)
-    CSV.open data[:enrollment][:kindergarten],
-                     headers: true,
-                     header_converters: :symbol
-  end
-
-  def get_locations(contents)
-    contents.map do |row|
-      row[:district]
-    end.uniq
-  end
-
-  def convert_csv_to_hashes(contents)
-    contents.map do |row|
-      {
-        district:    row[:location],
-        time_frame:  row[:timeframe],
-        data_format: row[:dataformat],
-        data:        row[:data]
-      }
-    end
-  end
-
   def load_enrollment_data(data)
     er.load_data(data)
   end
 
+  def get_locations
+    er.enrollments.map(&:name)
+  end
+
   def load_data(data)
     load_enrollment_data(data)
-    csv_contents = parse_file(data)
-    contents = convert_csv_to_hashes(csv_contents)
-    locations = get_locations(contents)
+    locations = get_locations
     create_districts(locations)
   end
 
   def find_by_name(district_name)
-    districts.detect do |district|
-      district.name == district_name.upcase
-    end
+    districts.detect { |district| district.name == district_name.upcase }
+  end
+
+  def find_all_by_name(names)
+    names.map { |name| find_by_name(name) }
   end
 
   def find_all_matching(fragment)
-    districts.select do |district|
-      district.name.include? fragment.upcase
-    end
+    districts.select { |district| district.name.include? fragment.upcase }
   end
 end
 
