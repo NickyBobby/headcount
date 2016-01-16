@@ -59,6 +59,8 @@ if __FILE__ == $0
       :high_school_graduation => "./data/High school graduation rates.csv"
     }
   })
+  binding.pry
+  # dr.er.find_by_name "ACADEMY 20"
 #   p dr.find_by_name "ACADEMY 20"
 #   p dr.find_by_name "Doesn't Exist"
 #   p dr.find_all_matching "AD"

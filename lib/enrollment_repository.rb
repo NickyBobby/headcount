@@ -40,13 +40,20 @@ class EnrollmentRepository
     enrollments.detect { |enrollment| enrollment.name == district.upcase }
   end
 
+  def merge_participation_by_year(enrollment, grade, participation_by_year)
+    if enrollment.participation[grade].nil?
+      enrollment.participation[grade] = participation_by_year
+    else
+      enrollment.participation[grade].merge!(participation_by_year)
+    end
+  end
+
   def create_enrollment(district, grade, participation_by_year)
     enrollment = enrollment_exists(district)
     unless enrollment.nil?
-      enrollment.participation[grade].merge!(participation_by_year)
+      merge_participation_by_year(enrollment, grade, participation_by_year)
     else
-      enrollments << Enrollment.new({
-        name: district,
+      enrollments << Enrollment.new({ name: district,
         grade_participation: { grade => participation_by_year }
       })
     end
