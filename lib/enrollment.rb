@@ -5,30 +5,35 @@ class Enrollment
 
   def initialize(data)
     @name = data[:name].upcase
-    @participation = sanitize(data[:kindergarten_participation])
+    @participation = sanitize(data[:grade_participation])
   end
 
   def sanitize(participation)
-    participation.each { |key, value| participation[key] = value.to_f.round(3) }
+    participation.each do |grade, participation_years|
+      participation_years.each do |year, percent|
+        participation[grade][year] = percent.to_f.round(3)
+      end
+    end
   end
 
   def kindergarten_participation_by_year
-    participation
+    participation[:kindergarten]
   end
 
   def kindergarten_participation_in_year(year)
-    participation[year]
+    participation[:kindergarten][year]
   end
 
   def get_participation_average
-    participation.values.inject(0, :+) / participation.count
+    participation[:kindergarten].values
+                                .inject(0, :+) / participation[:kindergarten].count
   end
 
   def get_participation_average_by_year(enrollment)
-    min, max = participation.keys.minmax
+    min, max = participation[:kindergarten].keys.minmax
     min.upto(max).each_with_object({}) do |year, avg|
-      next unless participation[year] && enrollment.participation[year]
-      average = participation[year] / enrollment.participation[year]
+      next unless participation[:kindergarten][year] && enrollment.participation[:kindergarten][year]
+      average = participation[:kindergarten][year] / enrollment.participation[:kindergarten][year]
       avg[year] = average.round(3)
     end
   end

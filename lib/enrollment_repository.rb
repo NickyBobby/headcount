@@ -10,19 +10,25 @@ class EnrollmentRepository
   end
 
   def parse_file(data)
-    CSV.open data[:enrollment][:kindergarten],
-                      headers: true,
-                      header_converters: :symbol
+    data.values.each_with_object({}) do  |grades, obj|
+      grades.each do |grade, file|
+        csv = CSV.open file, headers: true, header_converters: :symbol
+        obj[grade] = csv
+      end
+    end
   end
 
   def convert_csv_to_hashes(contents)
-    contents.map do |row|
-      {
-        district:    row[:location],
-        time_frame:  row[:timeframe],
-        data_format: row[:dataformat],
-        data:        row[:data]
-      }
+    contents.each do |grade, csv|
+      hashes = csv.map do |row|
+        {
+          district:    row[:location],
+          time_frame:  row[:timeframe],
+          data_format: row[:dataformat],
+          data:        row[:data]
+        }
+      end
+      contents[grade] = hashes
     end
   end
 
@@ -34,25 +40,27 @@ class EnrollmentRepository
     enrollments.detect { |enrollment| enrollment.name == district.upcase }
   end
 
-  def create_enrollment(district, participation_by_year)
+  def create_enrollment(district, grade, participation_by_year)
     enrollment = enrollment_exists(district)
     unless enrollment.nil?
-      enrollment.participation.merge!(participation_by_year)
+      enrollment.participation[grade].merge!(participation_by_year)
     else
       enrollments << Enrollment.new({
         name: district,
-        kindergarten_participation: participation_by_year
+        grade_participation: { grade => participation_by_year }
       })
     end
   end
 
   def extract_info(contents)
-    contents.each do |row|
-      district = row[:district]
-      year = row[:time_frame].to_i
-      participation = row[:data].to_f.round(3)
-      participation_by_year = connect_year_by_participation(participation, year)
-      create_enrollment(district, participation_by_year)
+    contents.each do |grade, rows|
+      rows.each do |row|
+        district = row[:district]
+        year = row[:time_frame].to_i
+        participation = row[:data].to_f.round(3)
+        participation_by_year = connect_year_by_participation(participation, year)
+        create_enrollment(district, grade, participation_by_year)
+      end
     end
   end
 
