@@ -15,7 +15,7 @@ class EnrollmentRepositoryTest < Minitest::Test
 
   def test_can_connect_year_with_the_participation_rate
     er = EnrollmentRepository.new
-    year_participation_hash = er.connect_year_by_participation(0.333, 2010)
+    year_participation_hash = er.connect_year_with_rate(0.333, 2010)
     expected = { 2010 => 0.333 }
 
     assert_equal expected, year_participation_hash
@@ -23,6 +23,26 @@ class EnrollmentRepositoryTest < Minitest::Test
 end
 
 class EnrollmentRepositoryIntegrationTest < Minitest::Test
+
+  #Load highschool data with kindergarten data
+meta current: true
+  def test_can_load_both_kindergarten_and_high_school_data
+    er = EnrollmentRepository.new
+    er.load_data({
+      enrollment: {
+        kindergarten: "./test/sample_kindergarten.csv",
+        high_school_graduation: "./test/sample_high_school_graduation.csv"
+      }
+    })
+    first_enrollment = er.enrollments[0]
+
+    assert_equal "COLORADO", first_enrollment.name
+    assert_equal 0.24, first_enrollment.participation[2004]
+    assert_equal 0, first_enrollment.graduation[2004]
+  end
+  #Create a Parser class
+  #Initialize an Enrollment with highschool graduation rates
+
 
   def test_can_load_data_into_enrollment_repository
     er = EnrollmentRepository.new
@@ -84,5 +104,9 @@ class EnrollmentRepositoryIntegrationTest < Minitest::Test
     enrollment = er.enrollment_exists("Colorado")
 
     assert_equal "COLORADO", enrollment.name
+  end
+
+  def test_whether_kindergarten_and_high_school_data_can_be_loaded_at_once
+
   end
 end

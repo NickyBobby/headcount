@@ -5,7 +5,8 @@ class Enrollment
 
   def initialize(data)
     @name = data[:name].upcase
-    @participation = sanitize(data[:kindergarten_participation])
+    @participation = sanitize(data[:kindergarten_participation])# santize in parser class
+    @graduation = [:high_school_graduation]
   end
 
   def sanitize(participation)
