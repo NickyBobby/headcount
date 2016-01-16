@@ -29,6 +29,11 @@ class Enrollment
                                 .inject(0, :+) / participation[:kindergarten].count
   end
 
+  def get_graduation_average
+    participation[:high_school_graduation].values
+                                          .inject(0, :+) / participation[:high_school_graduation].count
+  end
+
   def get_participation_average_by_year(enrollment)
     min, max = participation[:kindergarten].keys.minmax
     min.upto(max).each_with_object({}) do |year, avg|

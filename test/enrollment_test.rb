@@ -116,7 +116,4 @@ class EnrollmentTest < Minitest::Test
     assert_equal 0.895, e.graduation_rate_in_year(2010)
   end
 
-  def test_returns_rate_of_kindergarten_participation_versus_high_school_graduation_rate
-    
-  end
 end
