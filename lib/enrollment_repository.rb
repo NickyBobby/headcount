@@ -88,7 +88,8 @@ end
 #   er = EnrollmentRepository.new
 #   er.load_data({
 #     :enrollment => {
-#       :kindergarten => "./test/sample_kindergarten.csv"
+#       :kindergarten => "./test/sample_kindergarten.csv",
+#       :high_school_graduation => "./test/sample_high_school.csv"
 #     }
 #   })
 #   p er.enrollments

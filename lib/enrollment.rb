@@ -37,6 +37,14 @@ class Enrollment
       avg[year] = average.round(3)
     end
   end
+
+  def graduation_rate_by_year
+    participation[:high_school_graduation]
+  end
+
+  def graduation_rate_in_year(year=nil)
+    participation[:high_school_graduation][year]
+  end
 end
 
 # if __FILE__ == $0

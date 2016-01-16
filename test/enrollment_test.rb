@@ -89,4 +89,34 @@ class EnrollmentTest < Minitest::Test
 
     assert_equal expected, trend
   end
+
+  def test_will_return_high_school_graduation_rate_by_year
+    e = Enrollment.new(name: "ACADEMY 20",
+                       grade_participation: { high_school_graduation: {
+                         2010 => 0.895,
+                         2011 => 0.895,
+                         2012 => 0.88983
+                       }})
+    expected = { 2010 => 0.895, 2011 => 0.895, 2012 => 0.89 }
+
+    assert_instance_of Enrollment, e
+    assert_equal expected, e.graduation_rate_by_year
+  end
+
+  def test_will_return_graduation_rate_of_specific_year
+    e = Enrollment.new(name: "ACADEMY 20",
+                       grade_participation: { high_school_graduation: {
+                         2010 => 0.895,
+                         2011 => 0.895,
+                         2012 => 0.88983
+                       }})
+
+    assert_instance_of Enrollment, e
+    assert_equal nil, e.graduation_rate_in_year
+    assert_equal 0.895, e.graduation_rate_in_year(2010)
+  end
+
+  def test_returns_rate_of_kindergarten_participation_versus_high_school_graduation_rate
+    
+  end
 end
