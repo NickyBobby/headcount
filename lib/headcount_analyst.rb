@@ -63,6 +63,14 @@ class HeadcountAnalyst
         variance = kindergarten_participation_against_high_school_graduation(districts[:for])
         variance.between?(0.6, 1.5)
       end
+    elsif districts.member?(:across)
+      true_or_false = districts[:across].map do |district|
+        variance = kindergarten_participation_against_high_school_graduation(district)
+        variance.between?(0.6, 1.5)
+      end
+      total = true_or_false.count
+      true_count = true_or_false.count { |bool| bool == true }
+      true_count / total >= 0.7
     end
   end
 
