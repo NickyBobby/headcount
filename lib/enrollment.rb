@@ -1,3 +1,5 @@
+require_relative "sanitizer"
+
 class Enrollment
   attr_reader :name, :participation
 
@@ -46,24 +48,10 @@ class Enrollment
 
     def check_for_multiple_grades(data)
       if data[:grade_participation]
-        sanitize_files(data[:grade_participation])
+        Sanitizer.sanitize_grades(data[:grade_participation])
       else
-        sanitized_data = sanitize(data[:kindergarten_participation])
+        sanitized_data = Sanitizer.sanitize(data[:kindergarten_participation])
         { kindergarten: sanitized_data }
-      end
-    end
-
-    def sanitize(data)
-      data.each do |year, percent|
-        data[year] = percent.to_f.round(3)
-      end
-    end
-
-    def sanitize_files(participation)
-      participation.each do |grade, participation_years|
-        participation_years.each do |year, percent|
-          participation[grade][year] = percent.to_f.round(3)
-        end
       end
     end
 end

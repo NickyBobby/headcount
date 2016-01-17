@@ -15,4 +15,14 @@ class SanitizerTest < Minitest::Test
       Sanitizer.sanitize(data)
     end
   end
+
+  def test_can_sanitize_multiple_grades_with_participation
+    participation = {
+      kindergarten: { 2010 => 0.2345, 2011 => 0.9876 },
+      high_school_graduation: { 2010 => 0.12345, 2011 => 0.3456 }
+    }
+    Sanitizer.sanitize_grades(participation)
+    assert_equal 0.235, participation[:kindergarten][2010]
+    assert_equal 0.346, participation[:high_school_graduation][2011]
+  end
 end
