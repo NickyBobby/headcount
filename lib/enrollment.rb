@@ -37,8 +37,9 @@ class Enrollment
   end
 
   def get_graduation_average
-    participation[:high_school_graduation].values
-                                          .inject(0, :+) / participation[:high_school_graduation].count
+    (participation[:high_school_graduation].values
+                                           .inject(0, :+) /
+     participation[:high_school_graduation].count).round(3)
   end
 
   private

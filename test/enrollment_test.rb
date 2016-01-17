@@ -208,4 +208,14 @@ class EnrollmentTest < Minitest::Test
                        }})
     assert_equal nil, e.graduation_rate_in_year(2016)
   end
+
+  def test_returns_graduation_average
+    e = Enrollment.new(name: "ACADEMY 20",
+                       grade_participation: { high_school_graduation: {
+                         2010 => 0.895,
+                         2011 => 0.895,
+                         2012 => 0.88983
+                       }})
+    assert_equal 0.893, e.get_graduation_average
+  end
 end

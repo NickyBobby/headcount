@@ -42,7 +42,7 @@ class HeadcountAnalystTest < Minitest::Test
   def test_returns_rate_of_kindergarten_participation_versus_high_school_graduation_rate
     ha = HeadcountAnalyst.new(dr)
 
-    assert_equal 0.641, ha.kindergarten_participation_against_high_school_graduation("ACADEMY 20")
+    assert_equal 0.642, ha.kindergarten_participation_against_high_school_graduation("ACADEMY 20")
   end
 
   def test_can_predict_correlation_of_kindergarten_participation_and_high_school_graduation_within_the_same_district
