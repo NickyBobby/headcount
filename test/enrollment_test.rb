@@ -48,15 +48,15 @@ class EnrollmentTest < Minitest::Test
 
   def test_sanitizes_participation
     e = Enrollment.new(name: "ACADEMY 20",
-                       grade_participation: { kindergarten: {
+                       kindergarten_participation: {
                          2010 => 0.3915,
                          2011 => 0.35356,
                          2012 => 0.2677
-                       }})
-    sanitized = e.sanitize({ kindergarten: { 2010 => 0.3915 } })
+                       })
+    sanitized = e.sanitize({ 2010 => 0.3915 })
     expected = { 2010 => 0.392 }
 
-    assert_equal expected, sanitized[:kindergarten]
+    assert_equal expected, sanitized
   end
 
   def test_gets_average_participation_for_all_years
