@@ -25,4 +25,11 @@ class SanitizerTest < Minitest::Test
     assert_equal 0.235, participation[:kindergarten][2010]
     assert_equal 0.346, participation[:high_school_graduation][2011]
   end
+
+  def test_sanitize_grades_raises_an_argument_error_if_not_given_a_hash
+    data = [0.3688, 0.4567]
+    assert_raises ArgumentError do
+      Sanitizer.sanitize_grades(data)
+    end
+  end
 end
