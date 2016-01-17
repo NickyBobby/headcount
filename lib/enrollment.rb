@@ -5,10 +5,25 @@ class Enrollment
 
   def initialize(data)
     @name = data[:name].upcase
-    @participation = sanitize(data[:grade_participation])
+    @participation = check_for_multiple_files(data)
   end
 
-  def sanitize(participation)
+  def check_for_multiple_files(data)
+    if data[:grade_participation]
+      sanitize_files(data[:grade_participation])
+    else
+      sanitized_data = sanitize(data[:kindergarten_participation])
+      { kindergarten: sanitized_data }
+    end
+  end
+
+  def sanitize(data)
+    data.each do |year, percent|
+      data[year] = percent.to_f.round(3)
+    end
+  end
+
+  def sanitize_files(participation)
     participation.each do |grade, participation_years|
       participation_years.each do |year, percent|
         participation[grade][year] = percent.to_f.round(3)
