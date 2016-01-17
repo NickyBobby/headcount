@@ -9,6 +9,7 @@ class EnrollmentRepository
     @enrollments = []
   end
 
+
   def parse_file(data)
     data.values.each_with_object({}) do  |grades, obj|
       grades.each do |grade, file|
