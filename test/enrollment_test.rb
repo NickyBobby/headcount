@@ -2,8 +2,18 @@ require "test_helper"
 require "enrollment"
 
 class EnrollmentTest < Minitest::Test
-  def test_can_take_an_argument_with_a_name_in_it
+  def test_can_take_a_hash_with_a_name_key
     e = Enrollment.new(name: "ACADEMY 20",
+                       grade_participation: { kindergarten: {
+                         2010 => 0.3915,
+                         2011 => 0.35356,
+                         2012 => 0.2677
+                       }})
+    assert_equal "ACADEMY 20", e.name
+  end
+
+  def test_upcases_the_name_upon_creation
+    e = Enrollment.new(name: "academy 20",
                        grade_participation: { kindergarten: {
                          2010 => 0.3915,
                          2011 => 0.35356,
