@@ -22,6 +22,17 @@ class EnrollmentTest < Minitest::Test
     assert_equal "ACADEMY 20", e.name
   end
 
+  def test_can_be_created_with_data_from_a_single_grade
+    e = Enrollment.new(name: "ACADEMY 20",
+                       kindergarten_participation: {
+                         2010 => 0.3915,
+                         2011 => 0.35356,
+                         2012 => 0.2677
+                       })
+    assert e.participation.has_key? :kindergarten
+    refute e.participation.has_key? :high_school_graduation
+  end
+
   def test_will_return_list_of_kindergarten_participation_by_year
     e = Enrollment.new(name: "ACADEMY 20",
                        grade_participation: { kindergarten: {
@@ -112,5 +123,4 @@ class EnrollmentTest < Minitest::Test
     assert_equal nil, e.graduation_rate_in_year(2016)
     assert_equal 0.895, e.graduation_rate_in_year(2010)
   end
-
 end

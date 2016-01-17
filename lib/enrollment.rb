@@ -3,7 +3,7 @@ class Enrollment
 
   def initialize(data)
     @name = data[:name].upcase
-    @participation = check_for_multiple_files(data)
+    @participation = check_for_multiple_grades(data)
   end
 
   def kindergarten_participation_by_year
@@ -43,7 +43,7 @@ class Enrollment
 
   private
 
-    def check_for_multiple_files(data)
+    def check_for_multiple_grades(data)
       if data[:grade_participation]
         sanitize_files(data[:grade_participation])
       else
