@@ -13,4 +13,10 @@ class DistrictTest < Minitest::Test
 
     assert_equal "ACADEMY 20", d.name
   end
+
+  def test_has_an_enrollment_that_starts_off_nil
+    d = District.new(name: "ACADEMY 20")
+
+    assert_nil d.enrollment
+  end
 end
