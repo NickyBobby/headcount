@@ -8,4 +8,11 @@ class SanitizerTest < Minitest::Test
     assert_equal 0.369, data[2010]
     assert_equal 0.457, data[2011]
   end
+
+  def test_sanitize_raises_an_argument_error_if_not_given_a_hash
+    data = [0.3688, 0.4567]
+    assert_raises ArgumentError do
+      Sanitizer.sanitize(data)
+    end
+  end
 end
