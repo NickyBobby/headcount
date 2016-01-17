@@ -18,7 +18,7 @@ class DistrictTest < Minitest::Test
     assert_nil d.enrollment
   end
 
-  def test_can_assign_enrollment_to_enrollment_attribute
+  def test_can_assign_enrollment_object_to_enrollment_attribute
     d = District.new(name: "ACADEMY 20")
     e = Enrollment.new(name: "ACADEMY 20",
                        grade_participation: { kindergarten: {
