@@ -119,7 +119,6 @@ class EnrollmentTest < Minitest::Test
                          2012 => 0.2677
                        }})
     average = e.get_participation_average
-
     assert_equal 0.338, average
   end
 
@@ -138,7 +137,6 @@ class EnrollmentTest < Minitest::Test
                          }})
     trend = e1.get_participation_average_by_year(e2)
     expected = { 2010 => 0.681, 2011 => 0.728, 2012 => 0.689 }
-
     assert_equal expected, trend
   end
 
@@ -159,7 +157,6 @@ class EnrollmentTest < Minitest::Test
                          }})
     trend = e1.get_participation_average_by_year(e2)
     expected = { 2010 => 0.681, 2011 => 0.728, 2012 => 0.689 }
-
     assert_equal expected, trend
   end
 
@@ -178,11 +175,10 @@ class EnrollmentTest < Minitest::Test
                          }})
     trend = e1.get_participation_average_by_year(e2)
     expected = { 2010 => 0.681, 2011 => 0.728, 2012 => 0.689 }
-
     assert_equal expected, trend
   end
 
-  def test_will_return_high_school_graduation_rate_by_year
+  def test_returns_high_school_graduation_rate_by_year
     e = Enrollment.new(name: "ACADEMY 20",
                        grade_participation: { high_school_graduation: {
                          2010 => 0.895,
@@ -190,8 +186,6 @@ class EnrollmentTest < Minitest::Test
                          2012 => 0.88983
                        }})
     expected = { 2010 => 0.895, 2011 => 0.895, 2012 => 0.89 }
-
-    assert_instance_of Enrollment, e
     assert_equal expected, e.graduation_rate_by_year
   end
 
@@ -202,9 +196,16 @@ class EnrollmentTest < Minitest::Test
                          2011 => 0.895,
                          2012 => 0.88983
                        }})
-
-    assert_instance_of Enrollment, e
-    assert_equal nil, e.graduation_rate_in_year(2016)
     assert_equal 0.895, e.graduation_rate_in_year(2010)
+  end
+
+  def test_will_return_nil_if_graduation_rate_of_specific_year_does_not_exist
+    e = Enrollment.new(name: "ACADEMY 20",
+                       grade_participation: { high_school_graduation: {
+                         2010 => 0.895,
+                         2011 => 0.895,
+                         2012 => 0.88983
+                       }})
+    assert_equal nil, e.graduation_rate_in_year(2016)
   end
 end
