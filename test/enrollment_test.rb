@@ -48,7 +48,36 @@ class EnrollmentTest < Minitest::Test
                          }
                        })
     assert e.participation.has_key? :kindergarten
-    assert e.participation.has_key? :high_school_graduation                   
+    assert e.participation.has_key? :high_school_graduation
+  end
+
+  def test_sanitizes_participation_of_one_grade
+    e = Enrollment.new(name: "ACADEMY 20",
+                       kindergarten_participation: {
+                         2010 => 0.3915,
+                         2011 => 0.35356,
+                         2012 => 0.2677
+                       })
+
+    assert_equal e.kindergarten_participation_in_year(2010), 0.392
+  end
+
+  def test_sanitizes_participation_of_multiple_grades
+    e = Enrollment.new(name: "ACADEMY 20",
+                       grade_participation: {
+                         kindergarten: {
+                           2010 => 0.3915,
+                           2011 => 0.35356,
+                           2012 => 0.2677
+                         },
+                         high_school_graduation: {
+                           2010 => 0.895,
+                           2011 => 0.895,
+                           2012 => 0.88983
+                         }
+                       })
+    assert_equal e.kindergarten_participation_in_year(2010), 0.392
+    assert_equal e.graduation_rate_in_year(2012), 0.89
   end
 
   def test_will_return_list_of_kindergarten_participation_by_year
@@ -72,17 +101,6 @@ class EnrollmentTest < Minitest::Test
                          2012 => 0.2677
                        }})
     assert_equal 0.392, e.kindergarten_participation_in_year(2010)
-  end
-
-  def test_sanitizes_participation
-    e = Enrollment.new(name: "ACADEMY 20",
-                       kindergarten_participation: {
-                         2010 => 0.3915,
-                         2011 => 0.35356,
-                         2012 => 0.2677
-                       })
-
-    assert_equal e.kindergarten_participation_in_year(2010), 0.392
   end
 
   def test_gets_average_participation_for_all_years
