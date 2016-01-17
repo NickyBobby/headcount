@@ -33,6 +33,24 @@ class EnrollmentTest < Minitest::Test
     refute e.participation.has_key? :high_school_graduation
   end
 
+  def test_can_be_create_with_data_from_multiple_grades
+    e = Enrollment.new(name: "ACADEMY 20",
+                       grade_participation: {
+                         kindergarten: {
+                           2010 => 0.3915,
+                           2011 => 0.35356,
+                           2012 => 0.2677
+                         },
+                         high_school_graduation: {
+                           2010 => 0.895,
+                           2011 => 0.895,
+                           2012 => 0.88983
+                         }
+                       })
+    assert e.participation.has_key? :kindergarten
+    assert e.participation.has_key? :high_school_graduation                   
+  end
+
   def test_will_return_list_of_kindergarten_participation_by_year
     e = Enrollment.new(name: "ACADEMY 20",
                        grade_participation: { kindergarten: {
