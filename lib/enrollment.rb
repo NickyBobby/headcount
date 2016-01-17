@@ -8,26 +8,9 @@ class Enrollment
     @participation = check_for_multiple_files(data)
   end
 
-  def check_for_multiple_files(data)
-    if data[:grade_participation]
-      sanitize_files(data[:grade_participation])
-    else
-      sanitized_data = sanitize(data[:kindergarten_participation])
-      { kindergarten: sanitized_data }
-    end
-  end
-
   def sanitize(data)
     data.each do |year, percent|
       data[year] = percent.to_f.round(3)
-    end
-  end
-
-  def sanitize_files(participation)
-    participation.each do |grade, participation_years|
-      participation_years.each do |year, percent|
-        participation[grade][year] = percent.to_f.round(3)
-      end
     end
   end
 
@@ -44,11 +27,6 @@ class Enrollment
                                 .inject(0, :+) / participation[:kindergarten].count
   end
 
-  def get_graduation_average
-    participation[:high_school_graduation].values
-                                          .inject(0, :+) / participation[:high_school_graduation].count
-  end
-
   def get_participation_average_by_year(enrollment)
     min, max = participation[:kindergarten].keys.minmax
     min.upto(max).each_with_object({}) do |year, avg|
@@ -62,9 +40,33 @@ class Enrollment
     participation[:high_school_graduation]
   end
 
-  def graduation_rate_in_year(year=nil)
+  def graduation_rate_in_year(year)
     participation[:high_school_graduation][year]
   end
+
+  def get_graduation_average
+    participation[:high_school_graduation].values
+                                          .inject(0, :+) / participation[:high_school_graduation].count
+  end
+
+  private
+
+    def check_for_multiple_files(data)
+      if data[:grade_participation]
+        sanitize_files(data[:grade_participation])
+      else
+        sanitized_data = sanitize(data[:kindergarten_participation])
+        { kindergarten: sanitized_data }
+      end
+    end
+
+    def sanitize_files(participation)
+      participation.each do |grade, participation_years|
+        participation_years.each do |year, percent|
+          participation[grade][year] = percent.to_f.round(3)
+        end
+      end
+    end
 end
 
 # if __FILE__ == $0

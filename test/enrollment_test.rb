@@ -2,17 +2,6 @@ require "test_helper"
 require "enrollment"
 
 class EnrollmentTest < Minitest::Test
-
-  def test_can_be_instantiated_on
-    e = Enrollment.new(name: "ACADEMY 20",
-                       grade_participation: { kindergarten: {
-                         2010 => 0.3915,
-                         2011 => 0.35356,
-                         2012 => 0.2677
-                       }})
-    assert_instance_of Enrollment, e
-  end
-
   def test_can_take_an_argument_with_a_name_in_it
     e = Enrollment.new(name: "ACADEMY 20",
                        grade_participation: { kindergarten: {
@@ -53,10 +42,8 @@ class EnrollmentTest < Minitest::Test
                          2011 => 0.35356,
                          2012 => 0.2677
                        })
-    sanitized = e.sanitize({ 2010 => 0.3915 })
-    expected = { 2010 => 0.392 }
 
-    assert_equal expected, sanitized
+    assert_equal e.kindergarten_participation_in_year(2010), 0.392
   end
 
   def test_gets_average_participation_for_all_years
@@ -112,7 +99,7 @@ class EnrollmentTest < Minitest::Test
                        }})
 
     assert_instance_of Enrollment, e
-    assert_equal nil, e.graduation_rate_in_year
+    assert_equal nil, e.graduation_rate_in_year(2016)
     assert_equal 0.895, e.graduation_rate_in_year(2010)
   end
 
