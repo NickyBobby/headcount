@@ -17,16 +17,17 @@ class Enrollment
   end
 
   def get_participation_average
-    participation[:kindergarten].values
-                                .inject(0, :+) / participation[:kindergarten].count
+    participation[:kindergarten].values.inject(0, :+) /
+    participation[:kindergarten].count
   end
 
   def get_participation_average_by_year(enrollment)
     min, max = participation[:kindergarten].keys.minmax
     min.upto(max).each_with_object({}) do |year, avg|
-      next unless participation[:kindergarten][year] && enrollment.participation[:kindergarten][year]
-      average = participation[:kindergarten][year] / enrollment.participation[:kindergarten][year]
-      avg[year] = average.round(3)
+      next unless participation[:kindergarten][year] &&
+                  enrollment.participation[:kindergarten][year]
+      avg[year] = (participation[:kindergarten][year] /
+                   enrollment.participation[:kindergarten][year]).round(3)
     end
   end
 
