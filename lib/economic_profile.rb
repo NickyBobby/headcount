@@ -23,6 +23,10 @@ class EconomicProfile
     incomes.inject(0, :+) / incomes.count
   end
 
+  def median_household_income_average
+    median_household_income.values.inject(0, :+) / median_household_income.count
+  end
+
   private
 
     def raise_for_unknown_year(year, ranges)
