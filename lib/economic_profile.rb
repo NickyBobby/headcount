@@ -39,6 +39,11 @@ class EconomicProfile
     normalize.number(free_or_reduced_price_lunch[year][:percentage])
   end
 
+  def free_or_reduced_price_lunch_number_in_year(year)
+    raise_for_unknown_year(year, free_or_reduced_price_lunch.keys)
+    normalize.number(free_or_reduced_price_lunch[year][:total])
+  end
+
   private
 
     def raise_for_unknown_year_in_ranges(year, ranges)
