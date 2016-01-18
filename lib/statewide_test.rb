@@ -40,6 +40,7 @@ class StatewideTest
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
     raise UnknownDataError unless subject_list.include? subject
     yearly_proficency = proficient_by_grade(grade)
+    raise UnknownDataError unless yearly_proficency[year]
     yearly_proficency[year][subject]
   end
 
