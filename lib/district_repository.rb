@@ -13,29 +13,12 @@ class DistrictRepository
     @str = StatewideTestRepository.new
   end
 
-  def create_relationships(district)
-    enrollment = er.enrollment_exists(district.name)
-    st = str.statewide_test_exists(district.name)
-    district.enrollment = enrollment
-    district.statewide_test = st
-  end
-
   def create_districts(locations)
     locations.each do |location|
       district = District.new(name: location)
       create_relationships(district)
       @districts << district
     end
-  end
-
-  def load_relationship_data(data)
-    er.load_data({ enrollment: data[:enrollment] })
-    return unless data[:statewide_testing]
-    str.load_data({ statewide_testing: data[:statewide_testing] })
-  end
-
-  def get_locations
-    er.enrollments.map(&:name)
   end
 
   def load_data(data)
@@ -55,6 +38,25 @@ class DistrictRepository
   def find_all_matching(fragment)
     districts.select { |district| district.name.include? fragment.upcase }
   end
+
+  private
+
+    def create_relationships(district)
+      enrollment = er.enrollment_exists(district.name)
+      st = str.statewide_test_exists(district.name)
+      district.enrollment = enrollment
+      district.statewide_test = st
+    end
+
+    def load_relationship_data(data)
+      er.load_data({ enrollment: data[:enrollment] })
+      return unless data[:statewide_testing]
+      str.load_data({ statewide_testing: data[:statewide_testing] })
+    end
+
+    def get_locations
+      er.enrollments.map(&:name)
+    end
 end
 
 if __FILE__ == $0
@@ -74,5 +76,4 @@ if __FILE__ == $0
   })
   district = dr.find_by_name("ACADEMY 20")
   statewide_test = district.statewide_test
-  binding.pry
 end
