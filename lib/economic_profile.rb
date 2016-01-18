@@ -1,9 +1,10 @@
 require "pry"
 require_relative "unknown_data_error"
+require_relative "normalize"
 
 class EconomicProfile
   attr_reader :name, :median_household_income, :children_in_poverty,
-              :free_or_reduced_price_lunch, :title_i
+              :free_or_reduced_price_lunch, :title_i, :normalize
 
   def initialize(data)
     @name = data[:name].upcase
@@ -11,6 +12,7 @@ class EconomicProfile
     @children_in_poverty         = data[:children_in_poverty]
     @free_or_reduced_price_lunch = data[:free_or_reduced_price_lunch]
     @title_i                     = data[:title_i]
+    @normalize                   = Normalize.new
   end
 
   def median_household_income_in_year(year)
@@ -25,6 +27,10 @@ class EconomicProfile
 
   def median_household_income_average
     median_household_income.values.inject(0, :+) / median_household_income.count
+  end
+
+  def children_in_poverty_in_year(year)
+    normalize.number(children_in_poverty[year])
   end
 
   private

@@ -33,4 +33,9 @@ class EconomicProfileTest < Minitest::Test
     ep = EconomicProfile.new(economic_data)
     assert_equal 55000, ep.median_household_income_average
   end
+
+  def test_returns_children_in_poverty_in_year
+    ep = EconomicProfile.new(economic_data)
+    assert_equal 0.185, ep.children_in_poverty_in_year(2012)
+  end
 end
