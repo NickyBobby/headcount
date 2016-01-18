@@ -10,7 +10,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     }}
     csv_instance = er.parse_file(data)
 
-    assert_instance_of CSV, csv_instance
+    assert_instance_of CSV, csv_instance[:kindergarten]
   end
 
   def test_can_connect_year_with_the_participation_rate
@@ -37,21 +37,22 @@ class EnrollmentRepositoryIntegrationTest < Minitest::Test
 
   def test_can_extract_info_and_create_enrollment
     er = EnrollmentRepository.new
-    er.extract_info([
+    contents = { kindergarten: [
       {
         district:    "Colorado",
         time_frame:  "2010",
         data_format: "percentage",
         data:        "0.333"
       }
-    ])
+    ]}
+    er.extract_info(contents)
 
     assert_equal ["COLORADO"], er.enrollments.map(&:name)
   end
 
   def test_can_find_enrollment_by_name
     er = EnrollmentRepository.new
-    er.create_enrollment("Colorado",   { 2010 => 0.391 })
+    er.create_enrollment("Colorado", :kindergarten, { 2010 => 0.391 })
     e = er.find_by_name("Colorado")
 
     assert_instance_of Enrollment, e
@@ -60,8 +61,8 @@ class EnrollmentRepositoryIntegrationTest < Minitest::Test
 
   def test_can_find_by_name_with_case_insensitivity
     er = EnrollmentRepository.new
-    er.create_enrollment("Colorado",   { 2010 => 0.391 })
-    er.create_enrollment("ACADEMY 20", { 2010 => 0.391 })
+    er.create_enrollment("Colorado", :kindergarten,   { 2010 => 0.391 })
+    er.create_enrollment("ACADEMY 20", :kindergarten, { 2010 => 0.391 })
 
     e = er.find_by_name("ColOradO")
     f = er.find_by_name("academy 20")
@@ -72,7 +73,7 @@ class EnrollmentRepositoryIntegrationTest < Minitest::Test
 
   def test_returns_nil_if_cant_find_enrollment_by_name
     er = EnrollmentRepository.new
-    er.create_enrollment("Colorado", { 2010 => 0.391 })
+    er.create_enrollment("Colorado", :kindergarten, { 2010 => 0.391 })
     no = er.find_by_name("NOOOOO")
 
     assert_nil no
@@ -80,7 +81,7 @@ class EnrollmentRepositoryIntegrationTest < Minitest::Test
 
   def test_whether_enrollment_exists
     er = EnrollmentRepository.new
-    er.create_enrollment("Colorado", { 2010 => 0.333 })
+    er.create_enrollment("Colorado", :kindergarten, { 2010 => 0.333 })
     enrollment = er.enrollment_exists("Colorado")
 
     assert_equal "COLORADO", enrollment.name

@@ -55,9 +55,11 @@ end
 #   dr = DistrictRepository.new
 #   dr.load_data({
 #     enrollment: {
-#       kindergarten: "./data/Kindergartners in full-day program.csv"
+#       kindergarten: "./data/Kindergartners in full-day program.csv",
+#       :high_school_graduation => "./data/High school graduation rates.csv"
 #     }
 #   })
+  # dr.er.find_by_name "ACADEMY 20"
 #   p dr.find_by_name "ACADEMY 20"
 #   p dr.find_by_name "Doesn't Exist"
 #   p dr.find_all_matching "AD"
