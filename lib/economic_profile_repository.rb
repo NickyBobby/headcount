@@ -1,14 +1,44 @@
 require "pry"
+require "csv"
+require_relative "normalize"
 
 class EconomicProfileRepository
-  attr_reader :parser
+  attr_reader :normalize
 
   def initialize
     @economic_profiles = []
+    @normalize = Normalize.new
+  end
+
+  def parse_file(data)
+    data.values.each_with_object({}) do  |subjects, obj|
+      subjects.each do |subject, file|
+        csv = CSV.open file, headers: true, header_converters: :symbol
+        obj[subject] = csv
+      end
+    end
+  end
+
+  def convert_csv_to_hashes(contents)
+    contents.each do |profile, csv|
+      data = csv.map do |row|
+        single_data = {
+          district:    row[:location],
+          time_frame:  row[:timeframe],
+          data_format: row[:dataformat],
+          data:        row[:data]
+        }
+        single_data[:poverty_level] = row[:poverty_level] if row[:poverty_level]
+        single_data
+      end
+      contents[profile] = data
+    end
   end
 
   def load_data(data)
-    csv_contents = CSVParser.parse_files(epr_data)
+    csv_contents = parse_file(data)
+    contents = convert_csv_to_hashes(csv_contents)
+    normalized_contents = normalize.normalize_lunch(contents)
   end
 end
 

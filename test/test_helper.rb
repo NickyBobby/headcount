@@ -11,3 +11,21 @@ def economic_data
     :name => "academy 20"
   }
 end
+
+def lunch_data
+  [{ :district=>"Colorado",
+     :time_frame=>"2000",
+     :data_format=>"Percent",
+     :data=>"0.07",
+     :poverty_level=>"Eligible for Reduced Price Lunch" },
+   { :district=>"Colorado",
+     :time_frame=>"2000",
+     :data_format=>"Percent",
+     :data=>"0.27",
+     :poverty_level=>"Eligible for Free or Reduced Lunch" },
+   { :district=>"Colorado",
+     :time_frame=>"2000",
+     :data_format=>"Percent",
+     :data=>"0.2",
+     :poverty_level=>"Eligible for Free Lunch" }]
+end
