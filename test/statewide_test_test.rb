@@ -2,6 +2,22 @@ require "test_helper"
 require "statewide_test"
 
 class StatewideTestTest < Minitest::Test
+  def test_normalizes_data_on_initialize
+    st = StatewideTest.new(name: "ACADEMY 20", subject: {
+           third_grade: {
+             math:    { 2008 => 0.8578, 2009 => 0.8246 },
+             reading: { 2008 => 0.8662, 2009 => 0.8623 },
+             writing: { 2008 => 0.6714, 2009 => 0.7063 }
+           }
+         })
+    expected = {
+      math:    { 2008 => 0.858, 2009 => 0.825 },
+      reading: { 2008 => 0.866, 2009 => 0.862 },
+      writing: { 2008 => 0.671, 2009 => 0.706 }
+    }
+    assert_equal expected, st.subjects[:third_grade]
+  end
+
   def test_returns_a_hash_for_third_grade_grouped_by_year_referencing_subject_proficiency
     st = StatewideTest.new(name: "ACADEMY 20", subject: {
            third_grade: {

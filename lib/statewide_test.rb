@@ -1,3 +1,4 @@
+require_relative "sanitizer"
 require_relative "unknown_data_error"
 require_relative "unknown_race_error"
 
@@ -7,7 +8,7 @@ class StatewideTest
 
   def initialize(data)
     @name = data[:name].upcase
-    @subjects = data[:subject]
+    @subjects = Sanitizer.sanitize_subjects(data[:subject])
   end
 
   def build_subject_by_year(min, max, grade)
