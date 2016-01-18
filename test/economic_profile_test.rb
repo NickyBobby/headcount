@@ -39,10 +39,18 @@ class EconomicProfileTest < Minitest::Test
     assert_equal 0.185, ep.children_in_poverty_in_year(2012)
   end
 
+  def test_returns_free_or_reduced_price_lunch_percentage_in_year
+    ep = EconomicProfile.new(economic_data)
+    assert_equal 0.023, ep.free_or_reduced_price_lunch_percentage_in_year(2014)
+  end
+
   def test_raises_unknown_data_error_for_unknown_year
     ep = EconomicProfile.new(economic_data)
     assert_raises UnknownDataError do
       ep.children_in_poverty_in_year(1999)
+    end
+    assert_raises UnknownDataError do
+      ep.free_or_reduced_price_lunch_percentage_in_year(1999)
     end
   end
 end
