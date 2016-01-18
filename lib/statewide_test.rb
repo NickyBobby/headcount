@@ -45,6 +45,7 @@ class StatewideTest
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
+    raise UnknownDataError unless subject_list.include? subject
     yearly_proficency = proficient_by_race_or_ethnicity(race)
     yearly_proficency[year][subject]
   end
