@@ -73,4 +73,16 @@ class StatewideTestTest < Minitest::Test
 
     assert_equal 0.64, st.proficient_for_subject_by_grade_in_year(:math, 8, 2008)
   end
+
+  def test_can_return_proficiency_for_subject_by_race_in_year
+    st = StatewideTest.new(name: "ACADEMY 20", subject: {
+          asian: {
+            math:    { 2011 => 0.816, 2012 => 0.818, 2013 => 0.805 },
+            reading: { 2011 => 0.897, 2012 => 0.893, 2013 => 0.901 },
+            writing: { 2011 => 0.826, 2012 => 0.808, 2013 => 0.810 }
+          }
+        })
+
+    assert_equal 0.816, st.proficient_for_subject_by_race_in_year(:math, :asian, 2011)
+  end
 end

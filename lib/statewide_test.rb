@@ -38,4 +38,8 @@ class StatewideTest
     g = :eighth_grade if grade == 8
     subjects[g][subject][year]
   end
+
+  def proficient_for_subject_by_race_in_year(subject, race, year)
+    subjects[race][subject][year]
+  end
 end
