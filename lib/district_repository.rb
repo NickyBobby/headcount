@@ -5,7 +5,7 @@ require_relative "enrollment_repository"
 require_relative "statewide_test_repository"
 
 class DistrictRepository
-  attr_reader :districts, :er
+  attr_reader :districts, :er, :str
 
   def initialize
     @districts = []
@@ -13,22 +13,25 @@ class DistrictRepository
     @str = StatewideTestRepository.new
   end
 
-  def create_relationship(district)
+  def create_relationships(district)
     enrollment = er.enrollment_exists(district.name)
+    st = str.statewide_test_exists(district.name)
     district.enrollment = enrollment
+    district.statewide_test = st
   end
 
   def create_districts(locations)
     locations.each do |location|
       district = District.new(name: location)
-      create_relationship(district)
+      create_relationships(district)
       @districts << district
     end
   end
 
-  def load_enrollment_data(data)
-    er.load_data(data)
-    # start here  
+  def load_relationship_data(data)
+    er.load_data({ enrollment: data[:enrollment] })
+    return unless data[:statewide_testing]
+    str.load_data({ statewide_testing: data[:statewide_testing] })
   end
 
   def get_locations
@@ -36,7 +39,7 @@ class DistrictRepository
   end
 
   def load_data(data)
-    load_enrollment_data(data)
+    load_relationship_data(data)
     locations = get_locations
     create_districts(locations)
   end
@@ -54,17 +57,22 @@ class DistrictRepository
   end
 end
 
-# if __FILE__ == $0
-#   dr = DistrictRepository.new
-#   dr.load_data({
-#     enrollment: {
-#       kindergarten: "./data/Kindergartners in full-day program.csv",
-#       :high_school_graduation => "./data/High school graduation rates.csv"
-#     }
-#   })
-  # dr.er.find_by_name "ACADEMY 20"
-#   p dr.find_by_name "ACADEMY 20"
-#   p dr.find_by_name "Doesn't Exist"
-#   p dr.find_all_matching "AD"
-#   p dr.find_all_matching "%"
-# end
+if __FILE__ == $0
+  dr = DistrictRepository.new
+  dr.load_data({
+    :enrollment => {
+      :kindergarten => "./data/Kindergartners in full-day program.csv",
+      :high_school_graduation => "./data/High school graduation rates.csv",
+    },
+    :statewide_testing => {
+      :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+      :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+      :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+      :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+      :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+    }
+  })
+  district = dr.find_by_name("ACADEMY 20")
+  statewide_test = district.statewide_test
+  binding.pry
+end

@@ -9,6 +9,10 @@ class StatewideTestRepository
     @statewide_tests = []
   end
 
+  def statewide_test_exists(district)
+    statewide_tests.detect { |st| st.name == district.upcase }
+  end
+
   def parse_file(data)
     data.values.each_with_object({}) do  |subjects, obj|
       subjects.each do |subject, file|

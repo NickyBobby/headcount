@@ -11,20 +11,6 @@ class StatewideTest
     @subjects = Sanitizer.sanitize_subjects(data[:subject])
   end
 
-  def build_subject_by_year(min, max, grade)
-    min.upto(max).each_with_object({}) do |year, obj|
-      obj[year] = {
-        math:    subjects[grade][:math][year],
-        reading: subjects[grade][:reading][year],
-        writing: subjects[grade][:writing][year]
-      }
-    end
-  end
-
-  def convert_to_grade_symbol
-    { 3 => :third_grade, 8 => :eight_grade }
-  end
-
   def proficient_by_grade(grade)
     raise UnknownDataError unless [3, 8].include? grade
     grade = convert_to_grade_symbol[grade]
@@ -61,5 +47,19 @@ class StatewideTest
 
     def subject_list
       [:math, :reading, :writing]
+    end
+
+    def convert_to_grade_symbol
+      { 3 => :third_grade, 8 => :eight_grade }
+    end
+
+    def build_subject_by_year(min, max, grade)
+      min.upto(max).each_with_object({}) do |year, obj|
+        obj[year] = {
+          math:    subjects[grade][:math][year],
+          reading: subjects[grade][:reading][year],
+          writing: subjects[grade][:writing][year]
+        }
+      end
     end
 end

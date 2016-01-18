@@ -91,8 +91,6 @@ class DistrictRepositoryIntegrationTest < Minitest::Test
       }
     })
     district = dr.find_by_name("COLORADO")
-    dr.create_relationship(district)
-
     assert_equal "COLORADO", district.enrollment.name
   end
 end

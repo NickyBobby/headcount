@@ -61,9 +61,6 @@ class StatewideTestTest < Minitest::Test
     end
   end
 
-  # write test for normalizing data
-  # write test for UnknownDataError
-
   def test_returns_a_hash_for_race_grouped_by_year_referencing_subject_proficiency
     st = StatewideTest.new(name: "ACADEMY 20", subject: {
            asian: {
@@ -92,8 +89,6 @@ class StatewideTestTest < Minitest::Test
       st.proficient_by_race_or_ethnicity(:english)
     end
   end
-
-  # write test for UnknownDataError
 
   def test_returns_proficency_for_subject_by_grade_in_year
     st = StatewideTest.new(name: "ACADEMY 20", subject: {
