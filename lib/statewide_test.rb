@@ -38,6 +38,7 @@ class StatewideTest
   end
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
+    raise UnknownDataError unless subject_list.include? subject
     yearly_proficency = proficient_by_grade(grade)
     yearly_proficency[year][subject]
   end
@@ -47,8 +48,14 @@ class StatewideTest
     yearly_proficency[year][subject]
   end
 
-  def races
-    [:asian, :black, :pacific_islander, :hispanic, :native_american,
-     :two_or_more, :white]
-  end
+  private
+
+    def races
+      [:asian, :black, :pacific_islander, :hispanic, :native_american,
+       :two_or_more, :white]
+    end
+
+    def subject_list
+      [:math, :reading, :writing]
+    end
 end

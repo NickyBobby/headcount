@@ -91,6 +91,19 @@ class StatewideTestTest < Minitest::Test
     assert_equal 0.857, proficency
   end
 
+  def test_proficency_for_subject_by_grade_in_year_throws_an_unknown_data_error
+    st = StatewideTest.new(name: "ACADEMY 20", subject: {
+           third_grade: {
+             math:    { 2008 => 0.857, 2009 => 0.824 },
+             reading: { 2008 => 0.866, 2009 => 0.862 },
+             writing: { 2008 => 0.671, 2009 => 0.706 }
+           }
+         })
+    assert_raises UnknownDataError do
+      st.proficient_for_subject_by_grade_in_year(:science, 3, 2008)
+    end
+  end
+
   def test_returns_proficency_by_race_in_year
     st = StatewideTest.new(name: "ACADEMY 20", subject: {
            asian: {
