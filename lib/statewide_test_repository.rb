@@ -42,22 +42,30 @@ class StatewideTestRepository
     statewide_tests.detect { |s_test| s_test.name == district.upcase }
   end
 
-  def merge_rate_by_year(statewide_test, subject, rate_by_year)
-    # binding.pry
-    if statewide_test.subject[subject].nil?
-      statewide_test.subject[subject] = rate_by_year
+  def merge_rate_by_year(statewide_test, grade, subject, rate_by_year)
+    if statewide_test.test_stats[grade][subject].nil?
+      statewide_test.test_stats[grade][subject] = rate_by_year
     else
-      statewide_test.subject[subject].merge!(rate_by_year)
+      statewide_test.test_stats[grade].merge!(rate_by_year)
     end
   end
 
-  def create_statewide_test(district, subject, rate_by_year)
+  def merge_by_grade(statewide_test, grade, subject, rate_by_year)
+    if statewide_test.test_stats[grade].nil?
+      statewide_test.test_stats[grade]
+    else
+      statewide_test.test_stats[grade].merge!(statewide_test.test_stats[grade] )
+    end
+  end
+
+  def create_statewide_test(district, grade, subject, rate_by_year)
     statewide_test = statewide_test_exists?(district)
     unless statewide_test.nil?
-      merge_rate_by_year(statewide_test, subject, rate_by_year)
+      merge_by_grade(statewide_test, grade, subject, rate_by_year)
+      merge_rate_by_year(statewide_test, grade, subject, rate_by_year)
     else
       statewide_tests << StatewideTest.new({ name: district,
-        subject: { subject => rate_by_year }
+        test_stats: { grade => { subject => rate_by_year }}
       })
     end
   end
@@ -70,7 +78,8 @@ class StatewideTestRepository
         year = row[:time_frame].to_i
         rate = row[:data].to_f.round(3)
         rate_by_year = connect_year_with_rate(rate, year)
-        create_statewide_test(district, subject, rate_by_year)
+        # subject_with_rate = connect_subject_with_rate(subject, rate_by_year)
+        create_statewide_test(district, grade, subject, rate_by_year)
       end
     end
   end
@@ -79,21 +88,22 @@ class StatewideTestRepository
     csv_contents = parse_file(data)
     contents = convert_csv_to_hashes(csv_contents)
     extract_info(contents)
+    binding.pry
   end
 
 end
 
-# if __FILE__ == $0
-#   str = StatewideTestRepository.new
-#   str.load_data({
-#     :statewide_testing => {
-#       :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-#       :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
-#       :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
-#       :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
-#       :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
-#     }
-#   })
-#   str = str.find_by_name("ACADEMY 20")
-#   => <StatewideTest>
-# end
+if __FILE__ == $0
+  str = StatewideTestRepository.new
+  str.load_data({
+    :statewide_testing => {
+      :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+      :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+      :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+      :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+      :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+    }
+  })
+  # str = str.find_by_name("ACADEMY 20")
+  # => <StatewideTest>
+end

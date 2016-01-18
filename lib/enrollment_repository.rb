@@ -85,17 +85,17 @@ class EnrollmentRepository
   end
 end
 
-# if __FILE__ == $0
-#   er = EnrollmentRepository.new
-#   er.load_data({
-#     :enrollment => {
-#       :kindergarten => "./test/sample_kindergarten.csv",
-#       :high_school_graduation => "./test/sample_high_school.csv"
-#     }
-#   })
-#   p er.enrollments
-#   enrollment = er.find_by_name("ACADEMY 20")
-#   p enrollment
-#   enron = er.find_by_name("NOOOOOO")
-#   p enron
-# end
+if __FILE__ == $0
+  er = EnrollmentRepository.new
+  er.load_data({
+    :enrollment => {
+      :kindergarten => "./test/sample_kindergarten.csv",
+      :high_school_graduation => "./test/sample_high_school.csv"
+    }
+  })
+  p er.enrollments
+  enrollment = er.find_by_name("ACADEMY 20")
+  p enrollment
+  enron = er.find_by_name("NOOOOOO")
+  p enron
+end

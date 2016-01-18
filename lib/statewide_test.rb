@@ -1,16 +1,16 @@
 
 
 class StatewideTest
-  attr_reader :name, :subject
+  attr_reader :name, :test_stats
 
   def initialize(data)
     @name = data[:name].upcase
-    @subject = data[:subject] #check_for_multiple_files(data)
+    @test_stats = check_for_multiple_files(data)
   end
 
   def check_for_multiple_files(data)
-    if data[:subject]
-      sanitize_files(data[:subject])
+    if data[:test_stats]
+      sanitize_files(data[:test_stats])
     else
       sanitized_data = sanitize(data[:subject])
       { subject: sanitized_data }
@@ -23,10 +23,10 @@ class StatewideTest
     end
   end
 
-  def sanitize_files(subject)
-    subject.each do |subject, rate_by_year|
+  def sanitize_files(test_stats)
+    test_stats.each do |subject, rate_by_year|
       rate_by_year.each do |year, percent|
-        subject[subject][year] = percent #.to_f.round(3)
+        test_stats[subject][year] = percent #.to_f.round(3)
       end
     end
   end
