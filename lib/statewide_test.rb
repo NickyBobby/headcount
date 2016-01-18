@@ -20,8 +20,8 @@ class StatewideTest
 
   def proficient_by_race_or_ethnicity(race)
     raise UnknownRaceError unless races.include? race
-    min, max = subjects[race][:math].keys.minmax
-    build_subject_by_year(min, max, race)
+    min, max = subjects[:math][race].keys.minmax
+    build_subject_by_year_and_race(min, max, race)
   end
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
@@ -50,15 +50,29 @@ class StatewideTest
     end
 
     def convert_to_grade_symbol
-      { 3 => :third_grade, 8 => :eight_grade }
+      { 3 => :third_grade, 8 => :eighth_grade }
+    end
+
+    def check_for_no_value(num)
+      num == 0.0 ? "N/A" : num
     end
 
     def build_subject_by_year(min, max, grade)
       min.upto(max).each_with_object({}) do |year, obj|
         obj[year] = {
-          math:    subjects[grade][:math][year],
-          reading: subjects[grade][:reading][year],
-          writing: subjects[grade][:writing][year]
+          math:    check_for_no_value(subjects[grade][:math][year]),
+          reading: check_for_no_value(subjects[grade][:reading][year]),
+          writing: check_for_no_value(subjects[grade][:writing][year])
+        }
+      end
+    end
+
+    def build_subject_by_year_and_race(min, max, race)
+      min.upto(max).each_with_object({}) do |year, obj|
+        obj[year] = {
+          math:    check_for_no_value(subjects[:math][race][year]),
+          reading: check_for_no_value(subjects[:reading][race][year]),
+          writing: check_for_no_value(subjects[:writing][race][year])
         }
       end
     end
