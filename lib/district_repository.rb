@@ -2,13 +2,15 @@ require "csv"
 require "pry"
 require_relative "district"
 require_relative "enrollment_repository"
+require_relative "statewide_test_repository"
 
 class DistrictRepository
   attr_reader :districts, :er
 
   def initialize
     @districts = []
-    @er = EnrollmentRepository.new
+    @er  = EnrollmentRepository.new
+    @str = StatewideTestRepository.new
   end
 
   def create_relationship(district)
@@ -26,6 +28,7 @@ class DistrictRepository
 
   def load_enrollment_data(data)
     er.load_data(data)
+    # start here  
   end
 
   def get_locations
