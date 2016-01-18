@@ -32,4 +32,10 @@ class StatewideTest
     end
     result
   end
+
+  def proficient_for_subject_by_grade_in_year(subject, grade, year)
+    g = :third_grade if grade == 3
+    g = :eighth_grade if grade == 8
+    subjects[g][subject][year]
+  end
 end
