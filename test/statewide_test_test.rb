@@ -141,4 +141,17 @@ class StatewideTestTest < Minitest::Test
       st.proficient_for_subject_by_race_in_year(:science, :asian, 2011)
     end
   end
+
+  def test_proficency_for_subject_by_race_in_year_throws_error_for_invalid_year
+    st = StatewideTest.new(name: "ACADEMY 20", subject: {
+           asian: {
+             math:    { 2011 => 0.816, 2012 => 0.818, 2013 => 0.805 },
+             reading: { 2011 => 0.897, 2012 => 0.893, 2013 => 0.901 },
+             writing: { 2011 => 0.826, 2012 => 0.808, 2013 => 0.810 }
+           }
+         })
+    assert_raises UnknownDataError do
+      st.proficient_for_subject_by_race_in_year(:math, :asian, 2014)
+    end
+  end
 end
