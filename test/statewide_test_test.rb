@@ -64,6 +64,19 @@ class StatewideTestTest < Minitest::Test
     assert_equal expected, st.proficient_by_race_or_ethnicity(:asian)
   end
 
+  def test_proficient_by_race_or_ethnicity_raises_an_unknown_race_error
+    st = StatewideTest.new(name: "ACADEMY 20", subject: {
+           asian: {
+             math:    { 2011 => 0.816, 2012 => 0.818, 2013 => 0.805 },
+             reading: { 2011 => 0.897, 2012 => 0.893, 2013 => 0.901 },
+             writing: { 2011 => 0.826, 2012 => 0.808, 2013 => 0.810 }
+           }
+         })
+    assert_raises UnknownRaceError do
+      st.proficient_by_race_or_ethnicity(:english)
+    end
+  end
+
   # write test for UnknownDataError
 
   def test_returns_proficency_for_subject_by_grade_in_year

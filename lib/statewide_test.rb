@@ -1,4 +1,5 @@
 require_relative "unknown_data_error"
+require_relative "unknown_race_error"
 
 class StatewideTest
   attr_accessor :subjects
@@ -31,6 +32,7 @@ class StatewideTest
   end
 
   def proficient_by_race_or_ethnicity(race)
+    raise UnknownRaceError unless races.include? race
     min, max = subjects[race][:math].keys.minmax
     build_subject_by_year(min, max, race)
   end
@@ -43,5 +45,10 @@ class StatewideTest
   def proficient_for_subject_by_race_in_year(subject, race, year)
     yearly_proficency = proficient_by_race_or_ethnicity(race)
     yearly_proficency[year][subject]
+  end
+
+  def races
+    [:asian, :black, :pacific_islander, :hispanic, :native_american,
+     :two_or_more, :white]
   end
 end
