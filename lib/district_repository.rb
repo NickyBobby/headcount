@@ -24,7 +24,6 @@ class DistrictRepository
 
   def load_data(data)
     load_relationships(data)
-    locations = get_locations
     create_districts(locations)
   end
 
@@ -75,7 +74,7 @@ class DistrictRepository
       load_economic_profile(data)
     end
 
-    def get_locations
+    def locations
       er.enrollments.map(&:name)
     end
 end
