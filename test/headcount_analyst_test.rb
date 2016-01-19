@@ -98,10 +98,15 @@ class HeadcountAnalystTest < Minitest::Test
 
      assert_equal expected, ha.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
    end
-meta t: true
    def test_will_return_top_statewide_test_for_district_highest_rate_of_growth_for_all_subjects
      ha = HeadcountAnalyst.new(dr)
 
      assert_equal ["CHEYENNE MOUNTAIN 12", 0.229], ha.top_statewide_test_year_over_year_growth(grade: 3)
+   end
+meta t: true
+   def test_will_return_top_statewide_test_for_district_highest_rate_of_growth_for_all_weighted_subjects
+     ha = HeadcountAnalyst.new(dr)
+
+     assert_equal ["BUENA VISTA R-31", 0.011], ha.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
    end
 end

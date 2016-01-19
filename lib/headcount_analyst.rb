@@ -73,6 +73,47 @@ class HeadcountAnalyst
       else
         rate_differences.sort_by {|a| a.last}.last
       end
+    elsif data[:weighting]
+      math_weight = data[:weighting][:math]
+      reading_weight = data[:weighting][:reading]
+      writing_weight = data[:weighting][:writing]
+      grade = convert_to_grade_symbol[data[:grade]]
+      weighted_differences = []
+      dr.districts.each do |enrollment|
+        subject_list.each do |subject|
+          district = enrollment.statewide_test.name
+          subjects = enrollment.statewide_test.subjects[grade][subject]
+          min, max = subjects.keys.minmax
+          max_prof = subjects[max]
+          min_prof = subjects[min]
+          rate_diff = ((max_prof - min_prof)/(max - min)).round(3)
+          weighted_differences << [district, { subject => rate_diff }]
+        end
+      end
+      weighted_value = []
+      weighted_differences.each_slice(3) do |slice|
+        district = slice.first[0]
+        district_arr = []
+        slice.each do |arr|
+          if arr.last[:math]
+            district_arr << arr.last[:math] * math_weight
+          elsif arr.last[:reading]
+            district_arr << arr.last[:reading] * reading_weight
+          elsif arr.last[:writing]
+            district_arr << arr.last[:writing] * writing_weight
+          end
+        end
+        weighted_value << [district, district_arr]
+      end
+      sum = 0
+      weighted_diffs = []
+      weighted_value.each do |f, l|
+        l.each do |n|
+          sum += n
+        end
+        weighted_diffs << [f, (sum/3).round(3)]
+      end
+      weighted_diffs.sort_by { |arr| arr.last}.last
     else
       grade = convert_to_grade_symbol[data[:grade]]
       rate_differences = []
