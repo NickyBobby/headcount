@@ -3,15 +3,16 @@ require_relative "unknown_data_error"
 require_relative "normalize"
 
 class EconomicProfile
+  attr_accessor :free_or_reduced_price_lunch
   attr_reader :name, :median_household_income, :children_in_poverty,
-              :free_or_reduced_price_lunch, :title_i, :normalize
+              :title_i, :normalize
 
   def initialize(data)
     @name = data[:name].upcase
-    @median_household_income     = data[:median_household_income]
-    @children_in_poverty         = data[:children_in_poverty]
-    @free_or_reduced_price_lunch = data[:free_or_reduced_price_lunch]
-    @title_i                     = data[:title_i]
+    @median_household_income     = data[:median_household_income] || {}
+    @children_in_poverty         = data[:children_in_poverty] || {}
+    @free_or_reduced_price_lunch = data[:free_or_reduced_price_lunch] || {}
+    @title_i                     = data[:title_i] || {}
     @normalize                   = Normalize.new
   end
 
