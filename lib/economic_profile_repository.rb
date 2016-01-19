@@ -99,5 +99,4 @@ if __FILE__ == $0
       title_i: "./data/Title I students.csv"
     }
   })
-  binding.pry
 end

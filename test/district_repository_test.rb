@@ -108,4 +108,22 @@ class DistrictRepositoryIntegrationTest < Minitest::Test
     district = dr.find_by_name("COLORADO")
     assert_equal "COLORADO", district.statewide_test.name
   end
+
+  def test_creates_a_relationship_between_all_three_relationships
+    dr = DistrictRepository.new
+    dr.load_data({
+      enrollment: {
+        kindergarten: "./test/sample_kindergarten.csv"
+      },
+      statewide_testing: {
+        third_grade: "./test/sample_third_grade.csv"
+      },
+      economic_profile: {
+        :children_in_poverty => "./data/School-aged children in poverty.csv",
+        :free_or_reduced_price_lunch => "./data/Students qualifying for free or reduced price lunch.csv"
+      }
+    })
+    district = dr.find_by_name("COLORADO")
+    assert_equal "COLORADO", district.economic_profile.name
+  end
 end

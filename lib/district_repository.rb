@@ -3,14 +3,16 @@ require "pry"
 require_relative "district"
 require_relative "enrollment_repository"
 require_relative "statewide_test_repository"
+require_relative "economic_profile_repository"
 
 class DistrictRepository
-  attr_reader :districts, :er, :str
+  attr_reader :districts, :er, :str, :epr
 
   def initialize
     @districts = []
     @er  = EnrollmentRepository.new
     @str = StatewideTestRepository.new
+    @epr = EconomicProfileRepository.new
   end
 
   def create_districts(locations)
@@ -44,14 +46,18 @@ class DistrictRepository
     def create_relationships(district)
       enrollment = er.enrollment_exists(district.name)
       st = str.statewide_test_exists(district.name)
+      ep = epr.economic_profile_exists(district.name)
       district.enrollment = enrollment
       district.statewide_test = st
+      district.economic_profile = ep
     end
 
     def load_relationship_data(data)
       er.load_data({ enrollment: data[:enrollment] })
       return unless data[:statewide_testing]
       str.load_data({ statewide_testing: data[:statewide_testing] })
+      return unless data[:economic_profile]
+      epr.load_data({ economic_profile: data[:economic_profile] })
     end
 
     def get_locations
