@@ -83,6 +83,10 @@ class EconomicProfileRepository
     contents[:children_in_poverty] = normalize.normalize_poverty(poverty)
     extract_contents(contents)
   end
+
+  def find_by_name(name)
+    economic_profiles.detect { |ep| ep.name == name.upcase }
+  end
 end
 
 if __FILE__ == $0
