@@ -53,27 +53,58 @@ class HeadcountAnalyst
 
   def top_statewide_test_year_over_year_growth(data)
     raise InsufficientInformationError unless data[:grade]
-    # raise UnknownDataError if [3,8].include? data[:grade]
-    grade = convert_to_grade_symbol[data[:grade]]
-    subject = data[:subject]
-    rate_differences = []
-    #grab proficiency rates for that grade and subject across all districts
-    #calculate the most recent proficiency rate subtracted by the oldest proficiency rate
-    #push the district name and the profiency rate difference into an array
-    dr.districts.each do |enrollment|
-      district = enrollment.statewide_test.name
-      subjects = enrollment.statewide_test.subjects
-      min, max = subjects[grade][subject].keys.minmax
-      max_prof = subjects[grade][subject][max]
-      min_prof = subjects[grade][subject][min]
-      rate_diff = ((max_prof - min_prof)/(max - min)).round(3)
-      rate_differences << [district, rate_diff]
+    raise UnknownDataError unless [3, 8].include? data[:grade]
+    if data[:subject]
+      grade = convert_to_grade_symbol[data[:grade]]
+      subject = data[:subject]
+      rate_differences = []
+      dr.districts.each do |enrollment|
+        district = enrollment.statewide_test.name
+        subjects = enrollment.statewide_test.subjects[grade][subject]
+        min, max = subjects.keys.minmax
+        max_prof = subjects[max]
+        min_prof = subjects[min]
+        rate_diff = ((max_prof - min_prof)/(max - min)).round(3)
+        rate_differences << [district, rate_diff]
+      end
+      if data[:top]
+        top = data[:top]
+        rate_differences.sort_by {|a| a.last}[-top..-1]
+      else
+        rate_differences.sort_by {|a| a.last}.last
+      end
+    else
+      grade = convert_to_grade_symbol[data[:grade]]
+      rate_differences = []
+      dr.districts.each do |enrollment|
+        subject_list.each do |subject|
+          district = enrollment.statewide_test.name
+          subjects = enrollment.statewide_test.subjects[grade][subject]
+          min, max = subjects.keys.minmax
+          max_prof = subjects[max]
+          min_prof = subjects[min]
+          rate_diff = ((max_prof - min_prof)/(max - min)).round(3)
+          rate_differences << [district, subject, rate_diff]
+        end
+      end
+      sum = 0
+      sub_diffs = []
+      rate_differences.each_slice(3) do |slice|
+        district = slice.first[0]
+        slice.each do |arr|
+          sum += arr[2]
+        end
+        sub_diffs << [district, (sum/3).round(3)]
+      end
+      sub_diffs.sort_by {|a| a.last}.last
     end
-    #return the district and rate difference for the largest proficiency rate difference
-    rate_differences.sort_by {|a| a.last}.last
   end
 
   private
+
+    def subject_list
+      [:math, :reading, :writing]
+    end
 
     def convert_to_grade_symbol
       { 3 => :third_grade, 8 => :eighth_grade }

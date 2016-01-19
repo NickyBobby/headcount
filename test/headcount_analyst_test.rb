@@ -78,9 +78,30 @@ class HeadcountAnalystTest < Minitest::Test
       end
    end
 
+   def test_will_return_unknown_data_error_when_wrong_grade_is_given
+     ha = HeadcountAnalyst.new(dr)
+
+     assert_raises UnknownDataError do
+       ha.top_statewide_test_year_over_year_growth(grade: 9, subject: :math)
+     end
+   end
+
    def test_will_return_top_statewide_test_for_district_highest_rate_of_growth
      ha = HeadcountAnalyst.new(dr)
 
      assert_equal ["SPRINGFIELD RE-4", 0.149], ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
+   end
+
+   def test_will_return_top_3_statewide_tests_for_district_highest_rate_of_growth
+     ha = HeadcountAnalyst.new(dr)
+     expected = [["CHERAW 31", 0.088], ["WESTMINSTER 50", 0.1], ["SPRINGFIELD RE-4", 0.149]]
+
+     assert_equal expected, ha.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
+   end
+meta t: true
+   def test_will_return_top_statewide_test_for_district_highest_rate_of_growth_for_all_subjects
+     ha = HeadcountAnalyst.new(dr)
+
+     assert_equal ["CHEYENNE MOUNTAIN 12", 0.229], ha.top_statewide_test_year_over_year_growth(grade: 3)
    end
 end
