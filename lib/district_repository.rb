@@ -16,9 +16,7 @@ class DistrictRepository
 
   def create_districts(locations)
     locations.each do |location|
-      district = District.new(name: location)
-      create_relationships(district)
-      @districts << district
+      create_district(location)
     end
   end
 
@@ -48,6 +46,12 @@ class DistrictRepository
       district.enrollment = enrollment
       district.statewide_test = st
       district.economic_profile = ep
+    end
+
+    def create_district(location)
+      district = District.new(name: location)
+      create_relationships(district)
+      @districts << district
     end
 
     def load_enrollment(data)
