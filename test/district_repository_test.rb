@@ -2,14 +2,26 @@ require "test_helper"
 require "district_repository"
 
 class DistrictRepositoryTest < Minitest::Test
+  def test_starts_off_with_empty_districts
+    dr = DistrictRepository.new
+    assert_equal [], dr.districts
+  end
+
   def test_has_enrollment_repository_upon_creation
     dr = DistrictRepository.new
-
     assert_instance_of EnrollmentRepository, dr.er
   end
-end
 
-class DistrictRepositoryIntegrationTest < Minitest::Test
+  def test_has_statewide_test_repository_upon_creation
+    dr = DistrictRepository.new
+    assert_instance_of StatewideTestRepository, dr.str
+  end
+
+  def test_has_economic_profile_repository_upon_creation
+    dr = DistrictRepository.new
+    assert_instance_of EconomicProfileRepository, dr.epr
+  end
+
   def test_can_load_in_data_and_create_district_objects
     dr = DistrictRepository.new
     dr.load_data({
@@ -17,15 +29,15 @@ class DistrictRepositoryIntegrationTest < Minitest::Test
         kindergarten: "./test/sample_kindergarten.csv"
       }
     })
-
-    assert_instance_of District, dr.districts[0]
+    dr.districts.each do |district|
+      assert_instance_of District, district
+    end
   end
 
-  def test_can_create_districts
+  def test_can_manually_create_districts
     dr = DistrictRepository.new
-    dr.create_districts(["Chicago", "New Jersey"])
-
-    assert_equal ["CHICAGO", "NEW JERSEY"], dr.districts.map(&:name)
+    dr.create_districts(["ASPEN 1"])
+    assert_equal "ASPEN 1", dr.districts.first.name
   end
 
   def test_can_find_district_by_name
