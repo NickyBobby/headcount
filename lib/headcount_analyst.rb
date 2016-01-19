@@ -55,18 +55,7 @@ class HeadcountAnalyst
     raise InsufficientInformationError unless data[:grade]
     raise UnknownDataError unless [3, 8].include? data[:grade]
     if data[:subject]
-      grade = convert_to_grade_symbol[data[:grade]]
-      subject = data[:subject]
-      rate_differences = []
-      dr.districts.each do |enrollment|
-        district = enrollment.statewide_test.name
-        subjects = enrollment.statewide_test.subjects[grade][subject]
-        min, max = subjects.keys.minmax
-        max_prof = subjects[max]
-        min_prof = subjects[min]
-        rate_diff = ((max_prof - min_prof)/(max - min)).round(3)
-        rate_differences << [district, rate_diff]
-      end
+        rate_differences = get_rate_differences_by_subject(data)
       if data[:top]
         top = data[:top]
         rate_differences.sort_by {|a| a.last}[-top..-1]
@@ -77,19 +66,7 @@ class HeadcountAnalyst
       math_weight = data[:weighting][:math]
       reading_weight = data[:weighting][:reading]
       writing_weight = data[:weighting][:writing]
-      grade = convert_to_grade_symbol[data[:grade]]
-      weighted_differences = []
-      dr.districts.each do |enrollment|
-        subject_list.each do |subject|
-          district = enrollment.statewide_test.name
-          subjects = enrollment.statewide_test.subjects[grade][subject]
-          min, max = subjects.keys.minmax
-          max_prof = subjects[max]
-          min_prof = subjects[min]
-          rate_diff = ((max_prof - min_prof)/(max - min)).round(3)
-          weighted_differences << [district, { subject => rate_diff }]
-        end
-      end
+      weighted_differences = get_rate_differences_across_subjects(data)
       weighted_value = []
       weighted_differences.each_slice(3) do |slice|
         district = slice.first[0]
@@ -125,7 +102,7 @@ class HeadcountAnalyst
           max_prof = subjects[max]
           min_prof = subjects[min]
           rate_diff = ((max_prof - min_prof)/(max - min)).round(3)
-          rate_differences << [district, subject, rate_diff]
+          rate_differences << [district, rate_diff]
         end
       end
       sum = 0
@@ -133,7 +110,7 @@ class HeadcountAnalyst
       rate_differences.each_slice(3) do |slice|
         district = slice.first[0]
         slice.each do |arr|
-          sum += arr[2]
+          sum += arr[1]
         end
         sub_diffs << [district, (sum/3).round(3)]
       end
@@ -142,6 +119,39 @@ class HeadcountAnalyst
   end
 
   private
+
+    def get_rate_differences_across_subjects(data)
+      grade = convert_to_grade_symbol[data[:grade]]
+      rate_differences = []
+      dr.districts.each do |enrollment|
+        subject_list.each do |subject|
+          district = enrollment.statewide_test.name
+          subjects = enrollment.statewide_test.subjects[grade][subject]
+          min, max = subjects.keys.minmax
+          max_prof = subjects[max]
+          min_prof = subjects[min]
+          rate_diff = ((max_prof - min_prof)/(max - min)).round(3)
+          rate_differences << [district, { subject => rate_diff }]
+        end
+      end
+      rate_differences
+    end
+
+    def get_rate_differences_by_subject(data)
+      grade = convert_to_grade_symbol[data[:grade]]
+      subject = data[:subject]
+      rate_differences = []
+      dr.districts.each do |enrollment|
+        district = enrollment.statewide_test.name
+        subjects = enrollment.statewide_test.subjects[grade][subject]
+        min, max = subjects.keys.minmax
+        max_prof = subjects[max]
+        min_prof = subjects[min]
+        rate_diff = ((max_prof - min_prof)/(max - min)).round(3)
+        rate_differences << [district, rate_diff]
+      end
+      rate_differences
+    end
 
     def subject_list
       [:math, :reading, :writing]
