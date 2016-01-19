@@ -4,10 +4,8 @@ class Normalize
   end
 
   def normalize_lunch(lunch_data)
-    lunch_data.each_with_index do |data, i|
-      unless data[:poverty_level] == "Eligible for Free or Reduced Lunch"
-        lunch_data.delete_at i
-      end
+    lunch_data.select do |data|
+      data[:poverty_level] == "Eligible for Free or Reduced Lunch"
     end
   end
 end

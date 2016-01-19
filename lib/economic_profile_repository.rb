@@ -38,7 +38,9 @@ class EconomicProfileRepository
   def load_data(data)
     csv_contents = parse_file(data)
     contents = convert_csv_to_hashes(csv_contents)
-    normalized_contents = normalize.normalize_lunch(contents)
+    lunch_data = contents[:free_or_reduced_price_lunch]
+    contents[:free_or_reduced_price_lunch] = normalize.normalize_lunch(lunch_data)
+    binding.pry
   end
 end
 
