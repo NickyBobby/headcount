@@ -1,4 +1,7 @@
 require_relative "district_repository"
+require_relative "insufficient_information_error"
+require_relative "unknown_data_error"
+require 'pry'
 
 class HeadcountAnalyst
   attr_reader :dr
@@ -48,7 +51,33 @@ class HeadcountAnalyst
     end
   end
 
+  def top_statewide_test_year_over_year_growth(data)
+    raise InsufficientInformationError unless data[:grade]
+    # raise UnknownDataError if [3,8].include? data[:grade]
+    grade = convert_to_grade_symbol[data[:grade]]
+    subject = data[:subject]
+    rate_differences = []
+    #grab proficiency rates for that grade and subject across all districts
+    #calculate the most recent proficiency rate subtracted by the oldest proficiency rate
+    #push the district name and the profiency rate difference into an array
+    dr.districts.each do |enrollment|
+      district = enrollment.statewide_test.name
+      subjects = enrollment.statewide_test.subjects
+      min, max = subjects[grade][subject].keys.minmax
+      max_prof = subjects[grade][subject][max]
+      min_prof = subjects[grade][subject][min]
+      rate_diff = ((max_prof - min_prof)/(max - min)).round(3)
+      rate_differences << [district, rate_diff]
+    end
+    #return the district and rate difference for the largest proficiency rate difference
+    rate_differences.sort_by {|a| a.last}.last
+  end
+
   private
+
+    def convert_to_grade_symbol
+      { 3 => :third_grade, 8 => :eighth_grade }
+    end
 
     def grab_districts(district1, district2)
       dr.find_all_by_name([district1, district2])
@@ -79,3 +108,13 @@ class HeadcountAnalyst
       true_count / booleans.count >= 0.7
     end
 end
+
+# ha.top_statewide_test_year_over_year_growth(subject: :math)
+# ~> InsufficientInformationError: A grade must be provided to answer this question
+#
+# ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
+# => ...some sort of result...
+# ha.top_statewide_test_year_over_year_growth(grade: 8, subject: :math)
+# => ...some sort of result...
+# ha.top_statewide_test_year_over_year_growth(grade: 9, subject: :math)
+# ~> UnknownDataError: 9 is not a known grade
