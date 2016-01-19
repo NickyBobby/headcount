@@ -44,8 +44,6 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.create_districts(["ASPEN 1"])
     d = dr.find_by_name("ASPEN 1")
-
-    assert_instance_of District, d
     assert_equal "ASPEN 1", d.name
   end
 
@@ -53,8 +51,6 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.create_districts(["ASPEN 1"])
     d = dr.find_by_name("aspen 1")
-
-    assert_instance_of District, d
     assert_equal "ASPEN 1", d.name
   end
 
@@ -62,7 +58,6 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.create_districts(["ASPEN 1"])
     d = dr.find_by_name("lawls")
-
     assert d.nil?
   end
 
@@ -70,7 +65,6 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.create_districts(["ACADEMY 20", "ADAMS-ARAPAHOE 28J"])
     d = dr.find_all_matching("AD")
-
     assert_equal 2, d.count
     assert_equal "ACADEMY 20", d.first.name
     assert_equal "ADAMS-ARAPAHOE 28J", d.last.name
@@ -80,7 +74,6 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.create_districts(["ACADEMY 20", "ADAMS-ARAPAHOE 28J"])
     d = dr.find_all_matching("ad")
-
     assert_equal 2, d.count
     assert_equal "ACADEMY 20", d.first.name
     assert_equal "ADAMS-ARAPAHOE 28J", d.last.name
@@ -90,32 +83,20 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.create_districts(["ACADEMY 20", "ADAMS-ARAPAHOE 28J"])
     d = dr.find_all_matching("X")
-
     assert_equal 0, d.count
     assert_equal [], d
   end
 
   def test_creates_a_relationship_between_district_and_enrollment
     dr = DistrictRepository.new
-    dr.load_data({
-      enrollment: {
-        kindergarten: "./test/sample_kindergarten.csv"
-      }
-    })
+    dr.load_data(enrollment_file)
     district = dr.find_by_name("COLORADO")
     assert_equal "COLORADO", district.enrollment.name
   end
 
-  def test_creates_a_relationship_between_district_and_enrollment
+  def test_creates_a_relationship_between_statewide_and_enrollment
     dr = DistrictRepository.new
-    dr.load_data({
-      enrollment: {
-        kindergarten: "./test/sample_kindergarten.csv"
-      },
-      statewide_testing: {
-        third_grade: "./test/sample_third_grade.csv"
-      }
-    })
+    dr.load_data(enrollment_statewide_files)
 
     district = dr.find_by_name("COLORADO")
     assert_equal "COLORADO", district.statewide_test.name
@@ -123,18 +104,7 @@ class DistrictRepositoryTest < Minitest::Test
 
   def test_creates_a_relationship_between_all_three_relationships
     dr = DistrictRepository.new
-    dr.load_data({
-      enrollment: {
-        kindergarten: "./test/sample_kindergarten.csv"
-      },
-      statewide_testing: {
-        third_grade: "./test/sample_third_grade.csv"
-      },
-      economic_profile: {
-        :children_in_poverty => "./data/School-aged children in poverty.csv",
-        :free_or_reduced_price_lunch => "./data/Students qualifying for free or reduced price lunch.csv"
-      }
-    })
+    dr.load_data(load_all_files)
     district = dr.find_by_name("COLORADO")
     assert_equal "COLORADO", district.economic_profile.name
   end

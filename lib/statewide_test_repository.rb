@@ -79,17 +79,6 @@ class StatewideTestRepository
     end
   end
 
-  # def create_enrollment(district, grade, participation_by_year)
-  #   enrollment = enrollment_exists(district)
-  #   unless enrollment.nil?
-  #     merge_participation_by_year(enrollment, grade, participation_by_year)
-  #   else
-  #     enrollments << Enrollment.new({ name: district,
-  #       grade_participation: { grade => participation_by_year }
-  #     })
-  #   end
-  # end
-
   def extract_contents(contents)
     contents.each do |grade, rows|
       rows.each do |row|
