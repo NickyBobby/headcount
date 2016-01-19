@@ -1,5 +1,4 @@
 require "csv"
-require "pry"
 require_relative "district"
 require_relative "enrollment_repository"
 require_relative "statewide_test_repository"
@@ -24,7 +23,7 @@ class DistrictRepository
   end
 
   def load_data(data)
-    load_relationship_data(data)
+    load_relationships(data)
     locations = get_locations
     create_districts(locations)
   end
@@ -52,12 +51,28 @@ class DistrictRepository
       district.economic_profile = ep
     end
 
-    def load_relationship_data(data)
-      er.load_data({ enrollment: data[:enrollment] })
-      return unless data[:statewide_testing]
-      str.load_data({ statewide_testing: data[:statewide_testing] })
-      return unless data[:economic_profile]
-      epr.load_data({ economic_profile: data[:economic_profile] })
+    def load_enrollment(data)
+      unless data[:enrollment].nil?
+        er.load_data({ enrollment: data[:enrollment] })
+      end
+    end
+
+    def load_statewide_testing(data)
+      unless data[:statewide_testing].nil?
+        str.load_data({ statewide_testing: data[:statewide_testing] })
+      end
+    end
+
+    def load_economic_profile(data)
+      unless data[:economic_profile].nil?
+        epr.load_data({ economic_profile: data[:economic_profile] })
+      end
+    end
+
+    def load_relationships(data)
+      load_enrollment(data)
+      load_statewide_testing(data)
+      load_economic_profile(data)
     end
 
     def get_locations
