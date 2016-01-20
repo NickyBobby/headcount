@@ -77,4 +77,13 @@ class HeadcountAnalystTest < Minitest::Test
     expected = ["SANGRE DE CRISTO RE-22J", 0.071]
     assert_equal expected, result
   end
+
+  def test_returns_growth_across_all_three_subjects_weighted
+    ha = HeadcountAnalyst.new(dr)
+    result = ha.top_statewide_test_year_over_year_growth(grade: 3,
+      weighting: { math: 0.5, reading: 0.5, writing: 0.0 }
+    )
+    expected = ["WILEY RE-13 JT", 0.119]
+    assert_equal expected, result
+  end
 end
