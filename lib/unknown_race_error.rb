@@ -1,2 +1,0 @@
-class UnknownRaceError < ArgumentError
-end

@@ -1,5 +1,5 @@
 require_relative "district_repository"
-require_relative "insufficient_information_error"
+require_relative "headcount_errors"
 
 class HeadcountAnalyst
   attr_reader :dr

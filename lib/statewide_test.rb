@@ -1,6 +1,5 @@
 require_relative "sanitizer"
-require_relative "unknown_data_error"
-require_relative "unknown_race_error"
+require_relative "headcount_errors"
 
 class StatewideTest
   attr_accessor :subjects
