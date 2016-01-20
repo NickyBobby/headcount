@@ -1,4 +1,4 @@
-require_relative "sanitizer"
+require_relative "normalize"
 require_relative "headcount_errors"
 
 class StatewideTest
@@ -7,7 +7,7 @@ class StatewideTest
 
   def initialize(data)
     @name = data[:name].upcase
-    @subjects = Sanitizer.sanitize_subjects(data[:subject])
+    @subjects = Normalize.new.statewide_test_data(data[:subject])
   end
 
   def proficient_by_grade(grade)

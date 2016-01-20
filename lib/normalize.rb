@@ -25,6 +25,16 @@ class Normalize
     end
   end
 
+  def statewide_test_data(subjects)
+    subjects.each do |subject, classes|
+      classes.each do |klass, years|
+        years.each do |year, value|
+          subjects[subject][klass][year] = value.to_f.round(3)
+        end
+      end
+    end
+  end
+
   private
 
     def create_household_income_hash(profile, row)
