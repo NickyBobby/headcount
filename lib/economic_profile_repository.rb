@@ -33,17 +33,17 @@ class EconomicProfileRepository
     economic_profiles.detect { |ep| ep.name == name.upcase }
   end
 
-  def merge_economic_profile(economic_profile, data)
+  def merge_economic_profile(ep, data)
     symbol = data.keys.first
     unless data.keys.first == :free_or_reduced_price_lunch
-      economic_profile.send(symbol).merge!(data[symbol])
+      ep.send(symbol).merge!(data[symbol])
     else
       year = data[:free_or_reduced_price_lunch].keys.first
-      if economic_profile.free_or_reduced_price_lunch[year]
-        economic_profile.free_or_reduced_price_lunch[year]
+      if ep.free_or_reduced_price_lunch[year]
+        ep.free_or_reduced_price_lunch[year]
                         .merge!(data[:free_or_reduced_price_lunch][year])
       else
-        economic_profile.free_or_reduced_price_lunch.merge!(data[:free_or_reduced_price_lunch])
+        ep.free_or_reduced_price_lunch.merge!(data[:free_or_reduced_price_lunch])
       end
     end
   end
@@ -69,8 +69,8 @@ class EconomicProfileRepository
   def load_data(data)
     csv_contents = parser.parse_files(data)
     contents = convert_csv_to_hashes(csv_contents)
-    lunch_data = contents[:free_or_reduced_price_lunch]
-    contents[:free_or_reduced_price_lunch] = normalize.normalize_lunch(lunch_data)
+    lunch = contents[:free_or_reduced_price_lunch]
+    contents[:free_or_reduced_price_lunch] = normalize.normalize_lunch(lunch)
     poverty = contents[:children_in_poverty]
     contents[:children_in_poverty] = normalize.normalize_poverty(poverty)
     extract_contents(contents)
