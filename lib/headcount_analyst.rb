@@ -8,23 +8,23 @@ class HeadcountAnalyst
     @dr = district_repo
   end
 
-  def kindergarten_participation_rate_variation(district, compared_district)
-    districts = grab_districts(district, compared_district[:against])
+  def kindergarten_participation_rate_variation(district, compared)
+    districts = grab_districts(district, compared[:against])
     d1_average = districts.first.enrollment.get_participation_average
     d2_average = districts.last.enrollment.get_participation_average
     variation = (d1_average / d2_average).round(3)
     check_for_nan(variation)
   end
 
-  def kindergarten_participation_rate_variation_trend(district, compared_district)
-    districts = grab_districts(district, compared_district[:against])
+  def kindergarten_participation_rate_variation_trend(district, compared)
+    districts = grab_districts(district, compared[:against])
     e1 = districts.first.enrollment
     e2 = districts.last.enrollment
     e1.get_participation_average_by_year(e2)
   end
 
-  def high_school_graduation_rate_variation(district, compared_district)
-    districts = grab_districts(district, compared_district[:against])
+  def high_school_graduation_rate_variation(district, compared)
+    districts = grab_districts(district, compared[:against])
     d1_average = districts.first.enrollment.get_graduation_average
     d2_average = districts.last.enrollment.get_graduation_average
     variation = (d1_average / d2_average).round(3)
@@ -32,34 +32,35 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_against_high_school_graduation(district)
-    k_variation = kindergarten_participation_rate_variation(district, against: "COLORADO")
-    hs_variation = high_school_graduation_rate_variation(district, against: "COLORADO")
-    variation = (k_variation / hs_variation).round(3)
+    k = kindergarten_participation_rate_variation(district, against: "COLORADO")
+    hs = high_school_graduation_rate_variation(district, against: "COLORADO")
+    variation = (k / hs).round(3)
     check_for_nan(variation)
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation(districts)
-    if districts[:for] == "STATEWIDE" || districts[:across]
-      districts = districts[:across] || dr.districts
+  def kindergarten_participation_correlates_with_high_school_graduation(name)
+    if name[:for] == "STATEWIDE" || name[:across]
+      districts = name[:across] || dr.districts
       bools = participation_booleans(districts)
       above_seventy_percent?(bools)
     else
-      variance = kindergarten_participation_against_high_school_graduation(districts[:for])
-      within_range?(variance)
+      v = kindergarten_participation_against_high_school_graduation(name[:for])
+      within_range?(v)
     end
   end
 
   def top_statewide_test_year_over_year_growth(data)
     check_for_insufficient_information(data)
     if data[:subject].nil?
-      districts = dr.districts.map do |district|
-        growth = district.statewide_test.year_over_year_growth_all_subjects(data)
-        [district.name, growth.round(3)]
+      districts = dr.districts.map do |d|
+        growth = d.statewide_test.year_over_year_growth_all_subjects(data)
+        [d.name, growth.round(3)]
       end
     else
-      districts = dr.districts.map do |district|
-        growth = district.statewide_test.year_over_year_growth(data[:grade], data[:subject], 1.0)
-        [district.name, growth.round(3)]
+      districts = dr.districts.map do |d|
+        growth = d.statewide_test.year_over_year_growth(data[:grade],
+                                                        data[:subject], 1.0)
+        [d.name, growth.round(3)]
       end
     end
     sorted_districts = districts.sort_by { |d| d.last }.reverse
@@ -94,9 +95,9 @@ class HeadcountAnalyst
 
     def participation_booleans(districts)
       districts.map do |district_name|
-        district_name = district_name.name if district_name.is_a? District
-        variance = kindergarten_participation_against_high_school_graduation(district_name)
-        within_range?(variance)
+        name = district_name.name if district_name.is_a? District
+        v = kindergarten_participation_against_high_school_graduation(name)
+        within_range?(v)
       end
     end
 
