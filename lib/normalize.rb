@@ -41,10 +41,11 @@ class Normalize
 
     def create_lunch_hash(profile, row)
       year = row[:time_frame].to_i
+      data = row[:data]
       if row[:data_format] == "Number"
-        { profile => { year => { total: row[:data].to_i }}, name: row[:district] }
+        {profile => {year => {total: data.to_i}}, name: row[:district]}
       elsif row[:data_format] == "Percent"
-        { profile => { year => { percentage: row[:data].to_f }}, name: row[:district] }
+        {profile => {year => {percentage: data.to_f}}, name: row[:district]}
       end
     end
 end

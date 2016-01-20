@@ -40,7 +40,7 @@ class HeadcountAnalyst
 
   def kindergarten_participation_correlates_with_high_school_graduation(name)
     if name[:for] == "STATEWIDE" || name[:across]
-      districts = name[:across] || dr.districts
+      districts = name[:across] || dr.districts.map(&:name)
       bools = participation_booleans(districts)
       above_seventy_percent?(bools)
     else
@@ -94,8 +94,8 @@ class HeadcountAnalyst
     end
 
     def participation_booleans(districts)
-      districts.map do |district_name|
-        name = district_name.name if district_name.is_a? District
+      districts.map do |name|
+        # name = district_name.name if district_name.is_a? District
         v = kindergarten_participation_against_high_school_graduation(name)
         within_range?(v)
       end

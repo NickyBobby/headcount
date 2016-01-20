@@ -40,7 +40,7 @@ class HeadcountAnalystTest < Minitest::Test
     ha = HeadcountAnalyst.new(dr)
     assert_equal true, ha.kindergarten_participation_correlates_with_high_school_graduation(for: "ACADEMY 20")
   end
-
+  meta t: true
   def test_can_predict_correlation_of_kindergarten_participation_and_high_school_graduation_across_the_state
     ha = HeadcountAnalyst.new(dr)
     assert_equal false, ha.kindergarten_participation_correlates_with_high_school_graduation(for: "STATEWIDE")
