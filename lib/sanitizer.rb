@@ -14,4 +14,14 @@ module Sanitizer
       end
     end
   end
+
+  def self.sanitize_subjects(subjects)
+    subjects.each do |subject, classes|
+      classes.each do |klass, years|
+        years.each do |year, value|
+          subjects[subject][klass][year] = value.to_f.round(3)
+        end
+      end
+    end
+  end
 end

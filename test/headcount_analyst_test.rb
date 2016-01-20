@@ -10,6 +10,13 @@ class HeadcountAnalystTest < Minitest::Test
       enrollment: {
         kindergarten: "./data/Kindergartners in full-day program.csv",
         high_school_graduation: "./data/High school graduation rates.csv"
+      },
+      statewide_testing: {
+        third_grade: "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+        eighth_grade: "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+        math: "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+        reading: "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+        writing: "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
       }
     })
   end
@@ -61,5 +68,25 @@ class HeadcountAnalystTest < Minitest::Test
     ha = HeadcountAnalyst.new(dr)
 
     assert_equal false, ha.kindergarten_participation_correlates_with_high_school_graduation(across: ["ACADEMY 20", "CHERRY CREEK 5"])
+  end
+
+  def test_valid_grade_must_be_provided
+    ha = HeadcountAnalyst.new(dr)
+    assert_raises InsufficientInformationError do
+      ha.top_statewide_test_year_over_year_growth(subject: :math)
+    end
+  end
+
+  def test_returns_statewide_test_year_over_year_growth_top_district
+    ha = HeadcountAnalyst.new(dr)
+    d = ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
+    assert_equal ["WILEY RE-13 JT", 0.3], d
+  end
+
+  def test_returns_statewide_test_year_over_year_growth_for_top_three_districts
+    ha = HeadcountAnalyst.new(dr)
+    d = ha.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
+    expected = [["WILEY RE-13 JT", 0.3], ["SANGRE DE CRISTO RE-22J", 0.072], ["COTOPAXI RE-3", 0.07]]
+    assert_equal expected, d
   end
 end

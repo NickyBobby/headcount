@@ -1,45 +1,31 @@
-require "csv"
-require "pry"
 require_relative "district"
 require_relative "enrollment_repository"
+require_relative "statewide_test_repository"
+require_relative "economic_profile_repository"
 
 class DistrictRepository
-  attr_reader :districts, :er
+  attr_reader :districts, :er, :str, :epr
 
   def initialize
     @districts = []
-    @er = EnrollmentRepository.new
+    @er  = EnrollmentRepository.new
+    @str = StatewideTestRepository.new
+    @epr = EconomicProfileRepository.new
   end
 
-  def create_relationship(district)
-    enrollment = er.enrollment_exists(district.name)
-    district.enrollment = enrollment
+  def load_data(data)
+    load_relationships(data)
+    create_districts(locations)
   end
 
   def create_districts(locations)
     locations.each do |location|
-      district = District.new(name: location)
-      create_relationship(district)
-      @districts << district
+      create_district(location)
     end
   end
 
-  def load_enrollment_data(data)
-    er.load_data(data)
-  end
-
-  def get_locations
-    er.enrollments.map(&:name)
-  end
-
-  def load_data(data)
-    load_enrollment_data(data)
-    locations = get_locations
-    create_districts(locations)
-  end
-
-  def find_by_name(district_name)
-    districts.detect { |district| district.name == district_name.upcase }
+  def find_by_name(name)
+    districts.detect { |district| district.name == name.upcase }
   end
 
   def find_all_by_name(names)
@@ -49,19 +35,46 @@ class DistrictRepository
   def find_all_matching(fragment)
     districts.select { |district| district.name.include? fragment.upcase }
   end
-end
 
-# if __FILE__ == $0
-#   dr = DistrictRepository.new
-#   dr.load_data({
-#     enrollment: {
-#       kindergarten: "./data/Kindergartners in full-day program.csv",
-#       :high_school_graduation => "./data/High school graduation rates.csv"
-#     }
-#   })
-  # dr.er.find_by_name "ACADEMY 20"
-#   p dr.find_by_name "ACADEMY 20"
-#   p dr.find_by_name "Doesn't Exist"
-#   p dr.find_all_matching "AD"
-#   p dr.find_all_matching "%"
-# end
+  private
+
+    def load_enrollment(data)
+      unless data[:enrollment].nil?
+        er.load_data({ enrollment: data[:enrollment] })
+      end
+    end
+
+    def load_statewide_testing(data)
+      unless data[:statewide_testing].nil?
+        str.load_data({ statewide_testing: data[:statewide_testing] })
+      end
+    end
+
+    def load_economic_profile(data)
+      unless data[:economic_profile].nil?
+        epr.load_data({ economic_profile: data[:economic_profile] })
+      end
+    end
+
+    def load_relationships(data)
+      load_enrollment(data)
+      load_statewide_testing(data)
+      load_economic_profile(data)
+    end
+
+    def locations
+      er.enrollments.map(&:name)
+    end
+
+    def create_relationships(district)
+      district.enrollment       = er.enrollment_exists(district.name)
+      district.statewide_test   = str.statewide_test_exists(district.name)
+      district.economic_profile = epr.economic_profile_exists(district.name)
+    end
+
+    def create_district(location)
+      district = District.new(name: location)
+      create_relationships(district)
+      @districts << district
+    end
+end

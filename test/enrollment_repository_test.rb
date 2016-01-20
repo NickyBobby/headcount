@@ -1,8 +1,12 @@
 require "test_helper"
 require "enrollment_repository"
 
-
 class EnrollmentRepositoryTest < Minitest::Test
+  def test_starts_off_with_empty_enrollments
+    er = EnrollmentRepository.new
+    assert_equal [], er.enrollments
+  end
+
   def test_can_parse_a_CSV_file
     er = EnrollmentRepository.new
     data = { enrollment: {
