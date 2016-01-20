@@ -1,24 +1,16 @@
 require "pry"
-require "csv"
 require_relative "economic_profile"
 require_relative "normalize"
+require_relative "parser"
 
 class EconomicProfileRepository
   attr_accessor :economic_profiles
-  attr_reader :normalize
+  attr_reader :normalize, :parser
 
   def initialize
     @economic_profiles = []
     @normalize = Normalize.new
-  end
-
-  def parse_file(data)
-    data.values.each_with_object({}) do  |subjects, obj|
-      subjects.each do |subject, file|
-        csv = CSV.open file, headers: true, header_converters: :symbol
-        obj[subject] = csv
-      end
-    end
+    @parser = Parser.new
   end
 
   def convert_csv_to_hashes(contents)
@@ -75,7 +67,7 @@ class EconomicProfileRepository
   end
 
   def load_data(data)
-    csv_contents = parse_file(data)
+    csv_contents = parser.parse_files(data)
     contents = convert_csv_to_hashes(csv_contents)
     lunch_data = contents[:free_or_reduced_price_lunch]
     contents[:free_or_reduced_price_lunch] = normalize.normalize_lunch(lunch_data)
