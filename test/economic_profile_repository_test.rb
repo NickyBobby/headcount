@@ -7,6 +7,12 @@ class EconomicProfileRepositoryTest < Minitest::Test
     assert_equal [], epr.economic_profiles
   end
 
+  def test_can_load_in_data_and_create_economic_profile_objects
+    epr = EconomicProfileRepository.new
+    epr.load_data(economic_profile_files)
+    assert_instance_of EconomicProfile, epr.economic_profiles.first
+  end
+
   def test_can_find_economic_profile_by_name
     epr = EconomicProfileRepository.new
     epr.load_data(economic_profile_file)

@@ -31,6 +31,17 @@ def economic_profile_file
 }
 end
 
+def economic_profile_files
+  {
+    economic_profile: {
+      median_household_income: "./test/median_household_income_test.csv",
+      children_in_poverty: "./test/school_aged_children_in_poverty_test.csv",
+      free_or_reduced_price_lunch: "./test/students_qualifying_for_free_or_reduced_price_lunch_test.csv",
+      title_i: "./test/title_i_students_test.csv"
+    }
+  }
+end
+
 def enrollment_file
   {
     enrollment: {
