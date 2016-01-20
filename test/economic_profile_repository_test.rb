@@ -15,15 +15,22 @@ class EconomicProfileRepositoryTest < Minitest::Test
 
   def test_can_find_economic_profile_by_name
     epr = EconomicProfileRepository.new
-    epr.load_data(economic_profile_file)
+    epr.load_data(economic_profile_files)
     ep = epr.find_by_name("ACADEMY 20")
     assert_equal "ACADEMY 20", ep.name
   end
 
   def test_can_case_insensitively_find_economic_profile_by_name
     epr = EconomicProfileRepository.new
-    epr.load_data(economic_profile_file)
+    epr.load_data(economic_profile_files)
     ep = epr.find_by_name("academy 20")
     assert_equal "ACADEMY 20", ep.name
+  end
+
+  def test_returns_nil_if_cant_find_economic_profile_by_name
+    epr = EconomicProfileRepository.new
+    epr.load_data(economic_profile_files)
+    ep = epr.find_by_name("Zoolander")
+    assert_nil ep
   end
 end
