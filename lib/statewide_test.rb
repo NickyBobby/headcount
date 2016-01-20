@@ -38,6 +38,30 @@ class StatewideTest
     yearly_proficency[year][subject]
   end
 
+  def year_over_year_growth(grade, subject, weighting = 0.33)
+    grade = convert_to_grade_symbol[grade]
+    years = subjects[grade][subject].keys.select do |year|
+      subjects[grade][subject][year] > 0.0
+    end.sort
+    return 0.0 if years.count < 2
+    ((subjects[grade][subject][years.last] - subjects[grade][subject][years.first]) /
+    (years.last - years.first)) * weighting
+  end
+
+  def year_over_year_growth_all_subjects(data)
+    if data[:weighting]
+      growth = subject_list.inject(0) do |acc, subject|
+        acc + year_over_year_growth(data[:grade], subject, data[:weighting][subject])
+      end
+      growth.round(3)
+    else
+      growth = subject_list.inject(0) do |acc, subject|
+        acc + year_over_year_growth(data[:grade], subject)
+      end
+      growth.round(3)
+    end
+  end
+
   private
 
     def races
