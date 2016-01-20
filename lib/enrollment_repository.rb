@@ -65,8 +65,8 @@ class EnrollmentRepository
         district = row[:district]
         year = row[:time_frame].to_i
         participation = row[:data].to_f.round(3)
-        participation_by_year = connect_year_by_participation(participation, year)
-        create_enrollment(district, grade, participation_by_year)
+        year_participation = connect_year_by_participation(participation, year)
+        create_enrollment(district, grade, year_participation)
       end
     end
   end
