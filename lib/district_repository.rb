@@ -8,9 +8,9 @@ class DistrictRepository
 
   def initialize
     @districts = []
-    @er  = EnrollmentRepository.new
-    @str = StatewideTestRepository.new
-    @epr = EconomicProfileRepository.new
+    @er        = EnrollmentRepository.new
+    @str       = StatewideTestRepository.new
+    @epr       = EconomicProfileRepository.new
   end
 
   def create_districts(locations)

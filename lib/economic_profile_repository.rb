@@ -8,8 +8,8 @@ class EconomicProfileRepository
 
   def initialize
     @economic_profiles = []
-    @normalize = Normalize.new
-    @parser = Parser.new
+    @normalize         = Normalize.new
+    @parser            = Parser.new
   end
 
   def economic_profile_exists(name)

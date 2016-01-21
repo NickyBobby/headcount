@@ -6,8 +6,8 @@ class StatewideTestRepository
 
   def initialize
     @statewide_tests = []
-    @parser = Parser.new
-    @normalize = Normalize.new
+    @parser          = Parser.new
+    @normalize       = Normalize.new
   end
 
   def statewide_test_exists(district)
@@ -76,11 +76,11 @@ class StatewideTestRepository
 
   def prepare_data_for_creation(row, grade)
     data = {}
-    data[:grade] = grade
-    data[:district] = row[:district]
-    data[:year] = row[:time_frame].to_i
-    data[:proficiency] = row[:data].to_f.round(3)
-    data[:subject] = row[:subject]
+    data[:grade]        = grade
+    data[:district]     = row[:district]
+    data[:year]         = row[:time_frame].to_i
+    data[:proficiency]  = row[:data].to_f.round(3)
+    data[:subject]      = row[:subject]
     proficiency_by_year = connect_year_by_proficiency(data[:year], data[:proficiency])
     create_statewide_test(proficiency_by_year, data)
   end

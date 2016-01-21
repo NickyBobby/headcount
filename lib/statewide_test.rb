@@ -6,7 +6,7 @@ class StatewideTest
   attr_reader :name
 
   def initialize(data)
-    @name = data[:name].upcase
+    @name     = data[:name].upcase
     @subjects = Normalize.new.statewide_test_data(data[:subject])
   end
 

@@ -9,10 +9,10 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_rate_variation(district, compared)
-    districts = grab_districts(district, compared[:against])
+    districts  = grab_districts(district, compared[:against])
     d1_average = districts.first.enrollment.get_participation_average
     d2_average = districts.last.enrollment.get_participation_average
-    variation = (d1_average / d2_average).round(3)
+    variation  = (d1_average / d2_average).round(3)
     check_for_nan(variation)
   end
 
@@ -24,15 +24,15 @@ class HeadcountAnalyst
   end
 
   def high_school_graduation_rate_variation(district, compared)
-    districts = grab_districts(district, compared[:against])
+    districts  = grab_districts(district, compared[:against])
     d1_average = districts.first.enrollment.get_graduation_average
     d2_average = districts.last.enrollment.get_graduation_average
-    variation = (d1_average / d2_average).round(3)
+    variation  = (d1_average / d2_average).round(3)
     check_for_nan(variation)
   end
 
   def kindergarten_participation_against_high_school_graduation(district)
-    k = kindergarten_participation_rate_variation(district, against: "COLORADO")
+    k  = kindergarten_participation_rate_variation(district, against: "COLORADO")
     hs = high_school_graduation_rate_variation(district, against: "COLORADO")
     variation = (k / hs).round(3)
     check_for_nan(variation)

@@ -47,13 +47,13 @@ class Normalize
   private
 
     def create_economic_data_hash(profile, row)
-      key = row[:time_frame].to_i
+      key  = row[:time_frame].to_i
       data = row[:data].to_f
       { profile => { key => data }, name: row[:district] }
     end
 
     def create_household_income_hash(profile, row)
-      key = row[:time_frame].split("-").map(&:to_i)
+      key  = row[:time_frame].split("-").map(&:to_i)
       data = row[:data].to_i
       { profile => { key => data }, name: row[:district] }
     end

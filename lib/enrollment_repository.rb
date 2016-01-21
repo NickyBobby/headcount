@@ -6,7 +6,7 @@ class EnrollmentRepository
 
   def initialize
     @enrollments = []
-    @parser = Parser.new
+    @parser      = Parser.new
   end
 
   def connect_year_by_participation(participation, year)
@@ -38,7 +38,7 @@ class EnrollmentRepository
 
   def load_data(data)
     csv_contents = parser.parse_files(data)
-    contents = convert_csv_to_hashes(csv_contents)
+    contents     = convert_csv_to_hashes(csv_contents)
     extract_info(contents)
   end
 
