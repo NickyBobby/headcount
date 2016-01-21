@@ -37,18 +37,22 @@ class EconomicProfileRepository
     economic_profiles.detect { |ep| ep.name == name.upcase }
   end
 
+  def merge_free_or_reduced_price_lunch(ep, data)
+    year = data[:free_or_reduced_price_lunch].keys.first
+    if ep.free_or_reduced_price_lunch[year]
+      ep.free_or_reduced_price_lunch[year]
+                      .merge!(data[:free_or_reduced_price_lunch][year])
+    else
+      ep.free_or_reduced_price_lunch.merge!(data[:free_or_reduced_price_lunch])
+    end
+  end
+
   def merge_economic_profile(ep, data)
     symbol = data.keys.first
     unless data.keys.first == :free_or_reduced_price_lunch
       ep.send(symbol).merge!(data[symbol])
     else
-      year = data[:free_or_reduced_price_lunch].keys.first
-      if ep.free_or_reduced_price_lunch[year]
-        ep.free_or_reduced_price_lunch[year]
-                        .merge!(data[:free_or_reduced_price_lunch][year])
-      else
-        ep.free_or_reduced_price_lunch.merge!(data[:free_or_reduced_price_lunch])
-      end
+      merge_free_or_reduced_price_lunch(ep, data)
     end
   end
 
