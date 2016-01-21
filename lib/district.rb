@@ -3,7 +3,7 @@ class District
   attr_reader :name
 
   def initialize(data)
-    @name = data.fetch(:name).upcase
+    @name             = data.fetch(:name).upcase
     @enrollment       = nil
     @statewide_test   = nil
     @economic_profile = nil

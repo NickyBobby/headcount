@@ -1,5 +1,4 @@
-require "pry"
-require_relative "unknown_data_error"
+require_relative "headcount_errors"
 require_relative "normalize"
 
 class EconomicProfile
@@ -8,11 +7,11 @@ class EconomicProfile
               :title_i, :normalize
 
   def initialize(data)
-    @name = data[:name].upcase
-    @median_household_income     = data[:median_household_income] || {}
-    @children_in_poverty         = data[:children_in_poverty] || {}
+    @name                        = check_for_name(data[:name])
+    @median_household_income     = data[:median_household_income]     || {}
+    @children_in_poverty         = data[:children_in_poverty]         || {}
     @free_or_reduced_price_lunch = data[:free_or_reduced_price_lunch] || {}
-    @title_i                     = data[:title_i] || {}
+    @title_i                     = data[:title_i]                     || {}
     @normalize                   = Normalize.new
   end
 
@@ -51,6 +50,10 @@ class EconomicProfile
   end
 
   private
+
+    def check_for_name(name)
+      name ? name.upcase : ""
+    end
 
     def raise_for_unknown_year_in_ranges(year, ranges)
       exists = ranges.any? { |range| year.between?(range.first, range.last) }

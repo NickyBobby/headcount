@@ -20,15 +20,15 @@ def lunch_data
      :poverty_level=>"Eligible for Free Lunch" }]
 end
 
-def economic_profile_file
+def economic_profile_files
   {
-  :economic_profile => {
-    :median_household_income => "./data/Median household income.csv",
-    :children_in_poverty => "./data/School-aged children in poverty.csv",
-    :free_or_reduced_price_lunch => "./data/Students qualifying for free or reduced price lunch.csv",
-    :title_i => "./data/Title I students.csv"
+    economic_profile: {
+      median_household_income: "./test/median_household_income_test.csv",
+      children_in_poverty: "./test/school_aged_children_in_poverty_test.csv",
+      free_or_reduced_price_lunch: "./test/students_qualifying_for_free_or_reduced_price_lunch_test.csv",
+      title_i: "./test/title_i_students_test.csv"
+    }
   }
-}
 end
 
 def enrollment_file
@@ -39,18 +39,36 @@ def enrollment_file
   }
 end
 
-def statewide_file
-end
-
 def enrollment_statewide_files
   {
     enrollment: {
-      kindergarten: "./test/sample_kindergarten.csv"
+      kindergarten: "./test/sample_kindergarten.csv",
+      high_school_graduation: "./test/sample_high_school.csv"
     },
     statewide_testing: {
-      third_grade: "./test/sample_third_grade.csv"
+      third_grade: "./test/sample_third_grade.csv",
+      eighth_grade: "./test/sample_eighth_grade.csv",
+      math: "./test/sample_math.csv",
+      reading: "./test/sample_reading.csv",
+      writing: "./test/sample_writing.csv"
     }
   }
+end
+
+def headcount_analyst_files
+  {
+  enrollment: {
+    kindergarten: "./data/Kindergartners in full-day program.csv",
+    high_school_graduation: "./data/High school graduation rates.csv",
+  },
+  statewide_testing: {
+    third_grade: "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+    eighth_grade: "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+    math: "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+    reading: "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+    writing: "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+  }
+}
 end
 
 def load_all_files

@@ -7,14 +7,13 @@ class EnrollmentRepositoryTest < Minitest::Test
     assert_equal [], er.enrollments
   end
 
-  def test_can_parse_a_CSV_file
+  def test_can_load_in_data_and_create_enrollment_objects
     er = EnrollmentRepository.new
     data = { enrollment: {
       kindergarten: "./test/sample_kindergarten.csv"
     }}
-    csv_instance = er.parse_file(data)
-
-    assert_instance_of CSV, csv_instance[:kindergarten]
+    er.load_data(data)
+    assert_instance_of Enrollment, er.enrollments.first
   end
 
   def test_can_connect_year_with_the_participation_rate

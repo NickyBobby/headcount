@@ -4,7 +4,7 @@ class Enrollment
   attr_reader :name, :participation
 
   def initialize(data)
-    @name = data[:name].upcase
+    @name          = data[:name].upcase
     @participation = check_for_multiple_grades(data)
   end
 
