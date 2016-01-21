@@ -1,5 +1,6 @@
 require_relative "district_repository"
 require_relative "insufficient_information_error"
+require_relative "unknown_data_error"
 
 class HeadcountAnalyst
   attr_reader :dr
@@ -73,6 +74,11 @@ class HeadcountAnalyst
       if data[:grade].nil?
         raise InsufficientInformationError,
               "A grade must be provided to answer this question"
+
+      elsif ![3,8].include? data[:grade]
+        grade = data[:grade]
+        raise UnknownDataError,
+              "#{grade} is not a known grade."
       end
     end
 
@@ -107,21 +113,21 @@ class HeadcountAnalyst
 end
 
 
-if __FILE__ == $0
-  dr = DistrictRepository.new
-  dr.load_data({
-    enrollment: {
-      kindergarten: "./data/Kindergartners in full-day program.csv",
-      high_school_graduation: "./data/High school graduation rates.csv"
-    },
-    statewide_testing: {
-      third_grade: "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-      eighth_grade: "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
-      math: "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
-      reading: "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
-      writing: "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
-    }
-  })
-  ha = HeadcountAnalyst.new(dr)
-  p ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
-end
+# if __FILE__ == $0
+#   dr = DistrictRepository.new
+#   dr.load_data({
+#     enrollment: {
+#       kindergarten: "./data/Kindergartners in full-day program.csv",
+#       high_school_graduation: "./data/High school graduation rates.csv"
+#     },
+#     statewide_testing: {
+#       third_grade: "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+#       eighth_grade: "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+#       math: "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+#       reading: "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+#       writing: "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
+#     }
+#   })
+#   ha = HeadcountAnalyst.new(dr)
+#   p ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
+# end

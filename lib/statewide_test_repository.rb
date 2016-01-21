@@ -50,10 +50,6 @@ class StatewideTestRepository
     { year => participation }
   end
 
-  def statewide_test_exists(district_name)
-    statewide_tests.detect { |st| st.name == district_name.upcase }
-  end
-
   def merge_proficiency_by_year(statewide_test, proficiency_by_year, data)
     if statewide_test.subjects[data[:grade]]
       if statewide_test.subjects[data[:grade]][data[:subject]]
@@ -105,18 +101,4 @@ class StatewideTestRepository
       statewide_test.name.upcase.include?(statewide_test_name.upcase)
     end
   end
-end
-
-if __FILE__ == $0
-  str = StatewideTestRepository.new
-  str.load_data({
-    :statewide_testing => {
-      :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-      :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
-      :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
-      :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
-      :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
-    }
-  })
-  binding.pry
 end

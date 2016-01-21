@@ -77,6 +77,19 @@ class HeadcountAnalystTest < Minitest::Test
     end
   end
 
+  def test_raises_unknown_data_error_when_wrong_grade_is_entered
+    ha = HeadcountAnalyst.new(dr)
+    assert_raises UnknownDataError do
+      ha.top_statewide_test_year_over_year_growth(grade: 9)
+    end
+  end
+
+  def test_returns_statewide_test_year_over_year_growth_top_district_for_all_subjects
+    ha = HeadcountAnalyst.new(dr)
+    d = ha.top_statewide_test_year_over_year_growth(grade: 3)
+    assert_equal ["SANGRE DE CRISTO RE-22J", 0.071], d
+  end
+
   def test_returns_statewide_test_year_over_year_growth_top_district
     ha = HeadcountAnalyst.new(dr)
     d = ha.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
@@ -88,5 +101,11 @@ class HeadcountAnalystTest < Minitest::Test
     d = ha.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
     expected = [["WILEY RE-13 JT", 0.3], ["SANGRE DE CRISTO RE-22J", 0.072], ["COTOPAXI RE-3", 0.07]]
     assert_equal expected, d
+  end
+
+  def test_returns_statewide_test_year_over_year_growth_top_district_for_weighted_subjects
+    ha = HeadcountAnalyst.new(dr)
+    d = ha.top_statewide_test_year_over_year_growth(grade: 3, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+    assert_equal ["WILEY RE-13 JT", 0.119], d
   end
 end
