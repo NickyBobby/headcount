@@ -18,15 +18,19 @@ class EnrollmentRepository
     end
   end
 
+  def data_template(row)
+    {
+      district:    row[:location],
+      time_frame:  row[:timeframe],
+      data_format: row[:dataformat],
+      data:        row[:data]
+    }
+  end
+
   def convert_csv_to_hashes(contents)
     contents.each do |grade, csv|
       hashes = csv.map do |row|
-        {
-          district:    row[:location],
-          time_frame:  row[:timeframe],
-          data_format: row[:dataformat],
-          data:        row[:data]
-        }
+        data_template(row)
       end
       contents[grade] = hashes
     end
