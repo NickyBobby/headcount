@@ -7,7 +7,7 @@ class EconomicProfile
               :title_i, :normalize
 
   def initialize(data)
-    @name = data[:name].upcase
+    @name                        = check_for_name(data[:name])
     @median_household_income     = data[:median_household_income]     || {}
     @children_in_poverty         = data[:children_in_poverty]         || {}
     @free_or_reduced_price_lunch = data[:free_or_reduced_price_lunch] || {}
@@ -50,6 +50,10 @@ class EconomicProfile
   end
 
   private
+
+    def check_for_name(name)
+      name ? name.upcase : ""
+    end
 
     def raise_for_unknown_year_in_ranges(year, ranges)
       exists = ranges.any? { |range| year.between?(range.first, range.last) }
