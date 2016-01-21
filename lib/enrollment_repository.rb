@@ -63,14 +63,18 @@ class EnrollmentRepository
     end
   end
 
+  def prepare_data_for_creation(row, grade)
+    district = row[:district]
+    year = row[:time_frame].to_i
+    participation = row[:data].to_f.round(3)
+    year_participation = connect_year_by_participation(participation, year)
+    create_enrollment(district, grade, year_participation)
+  end
+
   def extract_info(contents)
     contents.each do |grade, rows|
       rows.each do |row|
-        district = row[:district]
-        year = row[:time_frame].to_i
-        participation = row[:data].to_f.round(3)
-        year_participation = connect_year_by_participation(participation, year)
-        create_enrollment(district, grade, year_participation)
+        prepare_data_for_creation(row, grade)
       end
     end
   end
