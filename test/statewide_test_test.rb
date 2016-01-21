@@ -93,7 +93,7 @@ class StatewideTestTest < Minitest::Test
              asian: { 2011 => 0.826, 2012 => 0.808, 2013 => 0.810 }
            }
          })
-    assert_raises UnknownRaceError do
+    assert_raises UnknownDataError do
       st.proficient_by_race_or_ethnicity(:english)
     end
   end
