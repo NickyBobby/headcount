@@ -91,17 +91,21 @@ class StatewideTestRepository
     end
   end
 
+  def prepare_data_for_creation(row, grade)
+    data = {}
+    data[:grade] = grade
+    data[:district] = row[:district]
+    data[:year] = row[:time_frame].to_i
+    data[:proficiency] = row[:data].to_f.round(3)
+    data[:subject] = row[:subject]
+    proficiency_by_year = connect_year_by_proficiency(data[:year], data[:proficiency])
+    create_statewide_test(proficiency_by_year, data)
+  end
+
   def extract_contents(contents)
     contents.each do |grade, rows|
       rows.each do |row|
-        data = {}
-        data[:grade] = grade
-        data[:district] = row[:district]
-        data[:year] = row[:time_frame].to_i
-        data[:proficiency] = row[:data].to_f.round(3)
-        data[:subject] = row[:subject]
-        proficiency_by_year = connect_year_by_proficiency(data[:year], data[:proficiency])
-        create_statewide_test(proficiency_by_year, data)
+        prepare_data_for_creation(row, grade)
       end
     end
   end
