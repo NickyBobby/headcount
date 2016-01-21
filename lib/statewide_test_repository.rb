@@ -58,27 +58,27 @@ class StatewideTestRepository
     statewide_tests.detect { |st| st.name == district_name.upcase }
   end
 
-  def merge_by_subject(statewide_test, proficiency_by_year, data)
-    if statewide_test.subjects[data[:grade]][data[:subject]]
-      statewide_test.subjects[data[:grade]][data[:subject]].merge!(proficiency_by_year)
+  def merge_by_subject(state_test, proficiency, data)
+    if state_test.subjects[data[:grade]][data[:subject]]
+      state_test.subjects[data[:grade]][data[:subject]].merge!(proficiency)
     else
-      statewide_test.subjects[data[:grade]].merge!(data[:subject] => proficiency_by_year)
+      state_test.subjects[data[:grade]].merge!(data[:subject] => proficiency)
     end
   end
 
-  def merge_proficiency_by_year(statewide_test, proficiency_by_year, data)
-    if statewide_test.subjects[data[:grade]]
-      merge_by_subject(statewide_test, proficiency_by_year, data)
+  def merge_proficiency_by_year(state_test, proficiency, data)
+    if state_test.subjects[data[:grade]]
+      merge_by_subject(state_test, proficiency, data)
     else
-      subject = { data[:subject] => proficiency_by_year }
-      statewide_test.subjects[data[:grade]] = subject
+      subject = { data[:subject] => proficiency }
+      state_test.subjects[data[:grade]] = subject
     end
   end
 
   def create_statewide_test(proficiency_by_year, data)
-    statewide_test = statewide_test_exists(data[:district])
-    unless statewide_test.nil?
-      merge_proficiency_by_year(statewide_test, proficiency_by_year, data)
+    state_test = statewide_test_exists(data[:district])
+    unless state_test.nil?
+      merge_proficiency_by_year(state_test, proficiency_by_year, data)
     else
       statewide_tests << StatewideTest.new({
         name: data[:district],
