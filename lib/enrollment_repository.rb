@@ -1,21 +1,12 @@
-require 'pry'
-require 'csv'
-require_relative 'enrollment'
+require_relative "enrollment"
+require_relative "parser"
 
 class EnrollmentRepository
-  attr_reader :enrollments
+  attr_reader :enrollments, :parser
 
   def initialize
     @enrollments = []
-  end
-
-  def parse_file(data)
-    data.values.each_with_object({}) do  |grades, obj|
-      grades.each do |grade, file|
-        csv = CSV.open file, headers: true, header_converters: :symbol
-        obj[grade] = csv
-      end
-    end
+    @parser = Parser.new
   end
 
   def data_template(row)
@@ -80,7 +71,7 @@ class EnrollmentRepository
   end
 
   def load_data(data)
-    csv_contents = parse_file(data)
+    csv_contents = parser.parse_files(data)
     contents = convert_csv_to_hashes(csv_contents)
     extract_info(contents)
   end

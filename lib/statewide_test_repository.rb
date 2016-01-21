@@ -1,25 +1,16 @@
-require "pry"
-require "csv"
 require_relative "statewide_test"
+require_relative "parser"
 
 class StatewideTestRepository
-  attr_reader :statewide_tests
+  attr_reader :statewide_tests, :parser
 
   def initialize
     @statewide_tests = []
+    @parser = Parser.new
   end
 
   def statewide_test_exists(district)
     statewide_tests.detect { |st| st.name == district.upcase }
-  end
-
-  def parse_file(data)
-    data.values.each_with_object({}) do  |subjects, obj|
-      subjects.each do |subject, file|
-        csv = CSV.open file, headers: true, header_converters: :symbol
-        obj[subject] = csv
-      end
-    end
   end
 
   def normalize_subject(subject)
@@ -111,7 +102,7 @@ class StatewideTestRepository
   end
 
   def load_data(data)
-    csv_contents = parse_file(data)
+    csv_contents = parser.parse_files(data)
     contents = convert_csv_to_hashes(csv_contents)
     extract_contents(contents)
   end
