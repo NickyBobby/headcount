@@ -49,23 +49,35 @@ class HeadcountAnalyst
     end
   end
 
-  def top_statewide_test_year_over_year_growth(data)
-    check_for_insufficient_information(data)
-    if data[:subject].nil?
-      districts = dr.districts.map do |d|
-        growth = d.statewide_test.year_over_year_growth_all_subjects(data)
-        [d.name, growth.round(3)]
-      end
-    else
-      districts = dr.districts.map do |d|
-        growth = d.statewide_test.year_over_year_growth(data[:grade],
-                                                        data[:subject], 1.0)
-        [d.name, growth.round(3)]
-      end
+  def create_growth_data_for_all_subjects(data)
+    dr.districts.map do |d|
+      growth = d.statewide_test.year_over_year_growth_all_subjects(data)
+      [d.name, growth.round(3)]
     end
+  end
+
+  def create_growth_data_for_subject(data)
+    dr.districts.map do |d|
+      growth = d.statewide_test.year_over_year_growth(data[:grade],
+                                                      data[:subject], 1.0)
+      [d.name, growth.round(3)]
+    end
+  end
+
+  def sort_districts(districts, data)
     sorted_districts = districts.sort_by { |d| d.last }.reverse
     return sorted_districts.first unless data[:top]
     sorted_districts[0...data[:top]]
+  end
+
+  def top_statewide_test_year_over_year_growth(data)
+    check_for_insufficient_information(data)
+    if data[:subject].nil?
+      districts = create_growth_data_for_all_subjects(data)
+    else
+      districts = create_growth_data_for_subject(data)
+    end
+    sort_districts(districts, data)
   end
 
   private
