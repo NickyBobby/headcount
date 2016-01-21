@@ -47,17 +47,26 @@ class StatewideTest
     (years.last - years.first)) * weighting
   end
 
+  def calculate_growth_with_weight(data)
+    growth = subject_list.inject(0) do |acc, subject|
+      acc + year_over_year_growth(data[:grade], subject,
+                                                data[:weighting][subject])
+    end
+    growth.round(3)
+  end
+
+  def calculate_growth_without_weight(data)
+    growth = subject_list.inject(0) do |acc, subject|
+      acc + year_over_year_growth(data[:grade], subject)
+    end
+    growth.round(3)
+  end
+
   def year_over_year_growth_all_subjects(data)
     if data[:weighting]
-      growth = subject_list.inject(0) do |acc, subject|
-        acc + year_over_year_growth(data[:grade], subject, data[:weighting][subject])
-      end
-      growth.round(3)
+      calculate_growth_with_weight(data)
     else
-      growth = subject_list.inject(0) do |acc, subject|
-        acc + year_over_year_growth(data[:grade], subject)
-      end
-      growth.round(3)
+      calculate_growth_without_weight(data)
     end
   end
 
