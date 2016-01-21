@@ -18,7 +18,7 @@ class StatewideTest
   end
 
   def proficient_by_race_or_ethnicity(race)
-    raise_error(UnknownRaceError, races.include?(race))
+    raise_error(UnknownDataError, races.include?(race))
     min, max = subjects[:math][race].keys.minmax
     build_subject_by_year_and_race(min, max, race)
   end
