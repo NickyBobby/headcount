@@ -12,7 +12,7 @@ class StatewideTest
 
   def proficient_by_grade(grade)
     raise_error(UnknownDataError, [3, 8].include?(grade))
-    grade = convert_to_grade_symbol[grade]
+    grade = grade_to_symbol[grade]
     min, max = subjects[grade][:math].keys.minmax
     build_subject_by_year(min, max, grade)
   end
@@ -38,7 +38,7 @@ class StatewideTest
   end
 
   def year_over_year_growth(grade, subject, weighting = 0.33)
-    grade = convert_to_grade_symbol[grade]
+    grade = grade_to_symbol[grade]
     years = subjects[grade][subject].keys.select do |year|
       subjects[grade][subject][year] > 0.0
     end.sort
@@ -76,7 +76,7 @@ class StatewideTest
       [:math, :reading, :writing]
     end
 
-    def convert_to_grade_symbol
+    def grade_to_symbol
       { 3 => :third_grade, 8 => :eighth_grade }
     end
 
