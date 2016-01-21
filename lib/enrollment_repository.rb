@@ -9,38 +9,8 @@ class EnrollmentRepository
     @parser = Parser.new
   end
 
-  def data_template(row)
-    {
-      district:    row[:location],
-      time_frame:  row[:timeframe],
-      data_format: row[:dataformat],
-      data:        row[:data]
-    }
-  end
-
-  def convert_csv_to_hashes(contents)
-    contents.each do |grade, csv|
-      hashes = csv.map do |row|
-        data_template(row)
-      end
-      contents[grade] = hashes
-    end
-  end
-
   def connect_year_by_participation(participation, year)
     { year => participation }
-  end
-
-  def enrollment_exists(district)
-    enrollments.detect { |enrollment| enrollment.name == district.upcase }
-  end
-
-  def merge_participation_by_year(enrollment, grade, participation_by_year)
-    if enrollment.participation[grade].nil?
-      enrollment.participation[grade] = participation_by_year
-    else
-      enrollment.participation[grade].merge!(participation_by_year)
-    end
   end
 
   def create_enrollment(district, grade, participation_by_year)
@@ -54,12 +24,8 @@ class EnrollmentRepository
     end
   end
 
-  def prepare_data_for_creation(row, grade)
-    district = row[:district]
-    year = row[:time_frame].to_i
-    participation = row[:data].to_f.round(3)
-    year_participation = connect_year_by_participation(participation, year)
-    create_enrollment(district, grade, year_participation)
+  def enrollment_exists(district)
+    enrollments.detect { |enrollment| enrollment.name == district.upcase }
   end
 
   def extract_info(contents)
@@ -81,4 +47,40 @@ class EnrollmentRepository
       enrollment.name.upcase.include?(district.upcase)
     end
   end
+
+  private
+
+    def convert_csv_to_hashes(contents)
+      contents.each do |grade, csv|
+        hashes = csv.map do |row|
+          data_template(row)
+        end
+        contents[grade] = hashes
+      end
+    end
+
+    def data_template(row)
+      {
+        district:    row[:location],
+        time_frame:  row[:timeframe],
+        data_format: row[:dataformat],
+        data:        row[:data]
+      }
+    end
+
+    def merge_participation_by_year(enrollment, grade, participation_by_year)
+      if enrollment.participation[grade].nil?
+        enrollment.participation[grade] = participation_by_year
+      else
+        enrollment.participation[grade].merge!(participation_by_year)
+      end
+    end
+
+    def prepare_data_for_creation(row, grade)
+      district = row[:district]
+      year = row[:time_frame].to_i
+      participation = row[:data].to_f.round(3)
+      year_participation = connect_year_by_participation(participation, year)
+      create_enrollment(district, grade, year_participation)
+    end
 end

@@ -2,30 +2,22 @@ require_relative "statewide_test"
 require_relative "parser"
 
 class StatewideTestRepository
-  attr_reader :statewide_tests, :parser
+  attr_reader :statewide_tests, :parser, :normalize
 
   def initialize
     @statewide_tests = []
     @parser = Parser.new
+    @normalize = Normalize.new
   end
 
   def statewide_test_exists(district)
     statewide_tests.detect { |st| st.name == district.upcase }
   end
 
-  def normalize_subject(subject)
-    if subject == "Hawaiian/Pacific Islander"
-      subject.split("/").last.gsub(/\s/, "_").downcase.to_sym
-    else
-      subject.gsub!(/\s/, "_")
-      subject.downcase.to_sym
-    end
-  end
-
   def data_template(row)
     {
       district:    row[:location],
-      subject:     normalize_subject(row[:score] || row[:race_ethnicity]),
+      subject:     normalize.normalize_subject(row[:score] || row[:race_ethnicity]),
       time_frame:  row[:timeframe],
       data_format: row[:dataformat],
       data:        row[:data]

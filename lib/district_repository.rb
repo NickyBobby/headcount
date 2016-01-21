@@ -13,15 +13,15 @@ class DistrictRepository
     @epr = EconomicProfileRepository.new
   end
 
-  def load_data(data)
-    load_relationships(data)
-    create_districts(locations)
-  end
-
   def create_districts(locations)
     locations.each do |location|
       create_district(location)
     end
+  end
+
+  def load_data(data)
+    load_relationships(data)
+    create_districts(locations)
   end
 
   def find_by_name(name)
@@ -38,21 +38,27 @@ class DistrictRepository
 
   private
 
-    def load_enrollment(data)
-      unless data[:enrollment].nil?
-        er.load_data({ enrollment: data[:enrollment] })
-      end
+    def create_district(location)
+      district = District.new(name: location)
+      create_relationships(district)
+      @districts << district
     end
 
-    def load_statewide_testing(data)
-      unless data[:statewide_testing].nil?
-        str.load_data({ statewide_testing: data[:statewide_testing] })
-      end
+    def create_relationships(district)
+      district.enrollment       = er.enrollment_exists(district.name)
+      district.statewide_test   = str.statewide_test_exists(district.name)
+      district.economic_profile = epr.economic_profile_exists(district.name)
     end
 
     def load_economic_profile(data)
       unless data[:economic_profile].nil?
         epr.load_data({ economic_profile: data[:economic_profile] })
+      end
+    end
+
+    def load_enrollment(data)
+      unless data[:enrollment].nil?
+        er.load_data({ enrollment: data[:enrollment] })
       end
     end
 
@@ -62,19 +68,13 @@ class DistrictRepository
       load_economic_profile(data)
     end
 
+    def load_statewide_testing(data)
+      unless data[:statewide_testing].nil?
+        str.load_data({ statewide_testing: data[:statewide_testing] })
+      end
+    end
+
     def locations
       er.enrollments.map(&:name)
-    end
-
-    def create_relationships(district)
-      district.enrollment       = er.enrollment_exists(district.name)
-      district.statewide_test   = str.statewide_test_exists(district.name)
-      district.economic_profile = epr.economic_profile_exists(district.name)
-    end
-
-    def create_district(location)
-      district = District.new(name: location)
-      create_relationships(district)
-      @districts << district
     end
 end

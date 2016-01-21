@@ -47,21 +47,6 @@ class StatewideTest
     (years.last - years.first)) * weighting
   end
 
-  def calculate_growth_with_weight(data)
-    growth = subject_list.inject(0) do |acc, subject|
-      acc + year_over_year_growth(data[:grade], subject,
-                                                data[:weighting][subject])
-    end
-    growth.round(3)
-  end
-
-  def calculate_growth_without_weight(data)
-    growth = subject_list.inject(0) do |acc, subject|
-      acc + year_over_year_growth(data[:grade], subject)
-    end
-    growth.round(3)
-  end
-
   def year_over_year_growth_all_subjects(data)
     if data[:weighting]
       calculate_growth_with_weight(data)
@@ -71,27 +56,6 @@ class StatewideTest
   end
 
   private
-
-    def raise_error(error, condition)
-      raise error unless condition
-    end
-
-    def races
-      [:asian, :black, :pacific_islander, :hispanic, :native_american,
-       :two_or_more, :white]
-    end
-
-    def subject_list
-      [:math, :reading, :writing]
-    end
-
-    def grade_to_symbol
-      { 3 => :third_grade, 8 => :eighth_grade }
-    end
-
-    def check_for_no_value(num)
-      num == 0.0 ? "N/A" : num
-    end
 
     def build_subject_by_year(min, max, grade)
       min.upto(max).each_with_object({}) do |year, obj|
@@ -111,5 +75,41 @@ class StatewideTest
           writing: check_for_no_value(subjects[:writing][race][year])
         }
       end
+    end
+
+    def calculate_growth_with_weight(data)
+      growth = subject_list.inject(0) do |acc, subject|
+        acc + year_over_year_growth(data[:grade], subject,
+                                                  data[:weighting][subject])
+      end
+      growth.round(3)
+    end
+
+    def calculate_growth_without_weight(data)
+      growth = subject_list.inject(0) do |acc, subject|
+        acc + year_over_year_growth(data[:grade], subject)
+      end
+      growth.round(3)
+    end
+
+    def check_for_no_value(num)
+      num == 0.0 ? "N/A" : num
+    end
+
+    def grade_to_symbol
+      { 3 => :third_grade, 8 => :eighth_grade }
+    end
+
+    def races
+      [:asian, :black, :pacific_islander, :hispanic, :native_american,
+       :two_or_more, :white]
+    end
+
+    def raise_error(error, condition)
+      raise error unless condition
+    end
+
+    def subject_list
+      [:math, :reading, :writing]
     end
 end
