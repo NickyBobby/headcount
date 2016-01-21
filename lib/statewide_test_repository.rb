@@ -31,16 +31,20 @@ class StatewideTestRepository
     end
   end
 
+  def data_template(row)
+    {
+      district:    row[:location],
+      subject:     normalize_subject(row[:score] || row[:race_ethnicity]),
+      time_frame:  row[:timeframe],
+      data_format: row[:dataformat],
+      data:        row[:data]
+    }
+  end
+
   def convert_csv_to_hashes(contents)
     contents.each do |subject, csv|
       data = csv.map do |row|
-        {
-          district:    row[:location],
-          subject:     normalize_subject(row[:score] || row[:race_ethnicity]),
-          time_frame:  row[:timeframe],
-          data_format: row[:dataformat],
-          data:        row[:data]
-        }
+        data_template(row)
       end
       contents[subject] = data
     end
