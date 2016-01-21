@@ -75,15 +75,19 @@ class StatewideTestRepository
     end
   end
 
+  def add_statewide_test_to_repository(proficiency_by_year, data)
+    statewide_tests << StatewideTest.new({
+      name: data[:district],
+      subject: { data[:grade] => { data[:subject] => proficiency_by_year } }
+    })
+  end
+
   def create_statewide_test(proficiency_by_year, data)
     state_test = statewide_test_exists(data[:district])
     unless state_test.nil?
       merge_proficiency_by_year(state_test, proficiency_by_year, data)
     else
-      statewide_tests << StatewideTest.new({
-        name: data[:district],
-        subject: { data[:grade] => { data[:subject] => proficiency_by_year } }
-      })
+      add_statewide_test_to_repository(proficiency_by_year, data)
     end
   end
 
