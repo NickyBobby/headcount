@@ -58,13 +58,17 @@ class StatewideTestRepository
     statewide_tests.detect { |st| st.name == district_name.upcase }
   end
 
+  def merge_by_subject(statewide_test, proficiency_by_year, data)
+    if statewide_test.subjects[data[:grade]][data[:subject]]
+      statewide_test.subjects[data[:grade]][data[:subject]].merge!(proficiency_by_year)
+    else
+      statewide_test.subjects[data[:grade]].merge!(data[:subject] => proficiency_by_year)
+    end
+  end
+
   def merge_proficiency_by_year(statewide_test, proficiency_by_year, data)
     if statewide_test.subjects[data[:grade]]
-      if statewide_test.subjects[data[:grade]][data[:subject]]
-        statewide_test.subjects[data[:grade]][data[:subject]].merge!(proficiency_by_year)
-      else
-        statewide_test.subjects[data[:grade]].merge!(data[:subject] => proficiency_by_year)
-      end
+      merge_by_subject(statewide_test, proficiency_by_year, data)
     else
       subject = { data[:subject] => proficiency_by_year }
       statewide_test.subjects[data[:grade]] = subject
