@@ -13,17 +13,21 @@ class EconomicProfileRepository
     @parser = Parser.new
   end
 
-  def convert_csv_to_hashes(contents)
+  def data_template(row)
+    single_data = {
+      district:    row[:location],
+      time_frame:  row[:timeframe],
+      data_format: row[:dataformat],
+      data:        row[:data]
+    }
+    single_data[:poverty_level] = row[:poverty_level] if row[:poverty_level]
+    single_data
+  end
+
+  def convert_to_hashes(contents)
     contents.each do |profile, csv|
       data = csv.map do |row|
-        single_data = {
-          district:    row[:location],
-          time_frame:  row[:timeframe],
-          data_format: row[:dataformat],
-          data:        row[:data]
-        }
-        single_data[:poverty_level] = row[:poverty_level] if row[:poverty_level]
-        single_data
+        data_template(row)
       end
       contents[profile] = data
     end
@@ -68,7 +72,7 @@ class EconomicProfileRepository
 
   def load_data(data)
     csv_contents = parser.parse_files(data)
-    contents = convert_csv_to_hashes(csv_contents)
+    contents = convert_to_hashes(csv_contents)
     lunch = contents[:free_or_reduced_price_lunch]
     contents[:free_or_reduced_price_lunch] = normalize.normalize_lunch(lunch)
     poverty = contents[:children_in_poverty]

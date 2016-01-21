@@ -95,7 +95,6 @@ class HeadcountAnalyst
 
     def participation_booleans(districts)
       districts.map do |name|
-        # name = district_name.name if district_name.is_a? District
         v = kindergarten_participation_against_high_school_graduation(name)
         within_range?(v)
       end
